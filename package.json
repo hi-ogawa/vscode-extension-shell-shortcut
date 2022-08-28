@@ -1,0 +1,88 @@
+{
+  "name": "vscode-extension-shell-shortcut",
+  "version": "0.0.0",
+  "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut"
+  },
+  "license": "MIT",
+  "publisher": "hi-ogawa",
+  "displayName": "Shell Shortcut",
+  "engines": {
+    "vscode": "^1.36.0"
+  },
+  "main": "./build/extension.js",
+  "activationEvents": [
+    "onCommand:extension.pipe-to-untitled.run"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "title": "Pipe to untitled",
+        "command": "extension.pipe-to-untitled.run",
+        "enablement": "resourceSet"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "extension.pipe-to-untitled.run"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "extension.pipe-to-untitled.run"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "extension.pipe-to-untitled.run"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "pipe-to-untitled configuration",
+      "properties": {
+        "hi-ogawa.pipe-to-untitled.commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "command"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "command": {
+                "type": "string"
+              }
+            }
+          },
+          "default": []
+        }
+      }
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch --preserveWatchOutput",
+    "tsc": "tsc",
+    "test": "node ./build/test/run-test.js",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.11",
+    "@types/vscode": "^1.36.0",
+    "@vscode/test-electron": "^1.6.2",
+    "mocha": "^9.1.3",
+    "prettier": "^2.5.0",
+    "typescript": "^4.5.2"
+  },
+  "volta": {
+    "node": "16.17.0"
+  }
+}

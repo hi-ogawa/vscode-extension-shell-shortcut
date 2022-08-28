@@ -1,0 +1,4 @@
+/node_modules
+/build
+/.vscode-test
+/src/test/demo-workspace
