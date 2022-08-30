@@ -14,37 +14,37 @@
   },
   "main": "./build/extension.js",
   "activationEvents": [
-    "onCommand:extension.pipe-to-untitled.run"
+    "onCommand:extension.shell-shortcut.run"
   ],
   "contributes": {
     "commands": [
       {
-        "title": "Pipe to untitled",
-        "command": "extension.pipe-to-untitled.run",
+        "title": "Run Shell Command",
+        "command": "extension.shell-shortcut.run",
         "enablement": "resourceSet"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "extension.pipe-to-untitled.run"
+          "command": "extension.shell-shortcut.run"
         }
       ],
       "editor/title/context": [
         {
-          "command": "extension.pipe-to-untitled.run"
+          "command": "extension.shell-shortcut.run"
         }
       ],
       "explorer/context": [
         {
-          "command": "extension.pipe-to-untitled.run"
+          "command": "extension.shell-shortcut.run"
         }
       ]
     },
     "configuration": {
-      "title": "pipe-to-untitled configuration",
+      "title": "shell-shortcut configuration",
       "properties": {
-        "hi-ogawa.pipe-to-untitled.commands": {
+        "hi-ogawa.shell-shortcut.commands": {
           "type": "array",
           "items": {
             "type": "object",

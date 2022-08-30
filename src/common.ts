@@ -3,9 +3,9 @@ import * as path from "path";
 import { URLSearchParams } from "url";
 
 export const EXT_ID = "hi-ogawa.vscode-extension-shell-shortcut";
-export const EXT_CONFIGURATION = "hi-ogawa.pipe-to-untitled";
-export const EXT_COMMAND = "extension.pipe-to-untitled.run";
-export const EXT_SCHEME = "pipe-to-untitled";
+export const EXT_CONFIGURATION = "hi-ogawa.shell-shortcut";
+export const EXT_COMMAND = "extension.shell-shortcut.run";
+export const EXT_SCHEME = "shell-shortcut";
 
 // TODO: Accept `exec` options via `ConverterConfig`
 export const EXEC_MAX_BUFFER = 1 << 29; // 512MB

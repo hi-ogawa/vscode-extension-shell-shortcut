@@ -267,6 +267,11 @@ export async function converterCommandCallback(
   context: vscode.ExtensionContext,
   sourceUri?: vscode.Uri
 ): Promise<void> {
+  if (!vscode.window.activeTextEditor) {
+    vscode.window.showWarningMessage("Active document URI not found");
+    return;
+  }
+
   // The first argument `sourceUri` is only available when the command is invoked via "editor/title" or "explorer/context" menu.
   // Otherwise look for an active uri from the editor
   sourceUri ??= vscode.window.activeTextEditor?.document.uri;
@@ -300,11 +305,27 @@ export async function converterCommandCallback(
 
   // Open document with custom uri
   const { converterConfig } = picked[QUICK_PICK_ITEM_INTERNAL];
+  const fileName = vscode.window.activeTextEditor?.document.fileName;
+  const line = vscode.window.activeTextEditor?.selection.active.line;
+  const command = parseCommand(converterConfig.command, fileName, line);
+  await runCommand(command, Buffer.from(""));
+  if (true as any) return;
+
   if (mainConfig.useUntitled) {
     await showCommandContentAsUntitled(sourceUri, converterConfig);
   } else {
     await showConverterUri(sourceUri, converterConfig);
   }
+}
+
+function parseCommand(
+  command: string,
+  fileName?: string,
+  line?: number
+): string {
+  command = command.replace("${__file__}", fileName ?? "");
+  command = command.replace("${__line__}", String(line ?? ""));
+  return command;
 }
 
 export function registerAll(
