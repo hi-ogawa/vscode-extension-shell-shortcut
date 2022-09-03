@@ -2,46 +2,129 @@ import { ExecOptions, exec } from "child_process";
 import * as path from "path";
 import { Readable } from "stream";
 import * as vscode from "vscode";
-import { ShellCommandConfig } from "./utils";
+import { EXT_ID, ShellCommandConfig, wrapReject } from "./utils";
 
-// TODO: configurable?
-const EXEC_MAX_BUFFER = 2 ** 29; // 512MB
+const FILE_NAME_PLACEHOLDER = "${__file__}";
+const LINE_NUMBER_PLACEHOLDER = "${__line__}";
 
-export function formatCommand(
-  command: string,
+export async function executeShellCommand(
+  shellCommandConfig: ShellCommandConfig,
+  inputUri?: vscode.Uri,
   fileName?: string,
-  line?: number
-): string {
-  command = command.replace("${__file__}", fileName ?? "");
-  command = command.replace("${__line__}", String(line ?? ""));
-  return command;
+  lineNumber?: number
+): Promise<void> {
+  let { command, pipeInput, pipeOutput } = shellCommandConfig;
+
+  //
+  // read input from the uri
+  //
+
+  let input: Buffer | undefined = undefined;
+  if (pipeInput) {
+    if (!inputUri) {
+      vscode.window.showErrorMessage(
+        "cannot pipe input (no active document is found)"
+      );
+      return;
+    }
+    input = await uriToBuffer(inputUri);
+  }
+
+  //
+  // format command (replace file/line placeholder)
+  //
+
+  if (command.includes(FILE_NAME_PLACEHOLDER)) {
+    if (typeof fileName === "undefined") {
+      vscode.window.showErrorMessage(
+        "pipe input (no active document is found)"
+      );
+      return;
+    }
+    command = command.replace(FILE_NAME_PLACEHOLDER, fileName);
+  }
+
+  if (command.includes(LINE_NUMBER_PLACEHOLDER)) {
+    if (typeof lineNumber === "undefined") {
+      vscode.window.showErrorMessage(
+        "cannot pipe input (no active document is found)"
+      );
+      return;
+    }
+    command = command.replace(LINE_NUMBER_PLACEHOLDER, String(lineNumber));
+  }
+
+  //
+  // execute
+  //
+
+  const result = await wrapReject(runCommand(command, input));
+
+  if (!result.ok) {
+    let message = `shell command error`;
+    if (result.value instanceof Error) {
+      message += ": " + result.value.toString();
+    }
+    vscode.window.showErrorMessage(message);
+    return;
+  }
+
+  const { stdout, stderr } = result.value;
+  if (stderr) {
+    vscode.window.showWarningMessage(`shell command stderr:\n${stderr}`);
+  }
+
+  //
+  // output to untitled document
+  //
+
+  if (pipeOutput) {
+    if (!stdout) {
+      vscode.window.showWarningMessage(`no stdout`);
+      return;
+    }
+
+    const uri = vscode.Uri.from({
+      scheme: "untitled",
+      path: formatPath(inputUri?.path ?? EXT_ID),
+    });
+    const document = await vscode.workspace.openTextDocument(uri);
+    const editor = await vscode.window.showTextDocument(document);
+    await editor.edit((builder) => {
+      builder.replace(new vscode.Range(0, 0, document.lineCount, 0), stdout);
+    });
+  }
 }
 
-export async function runCommand(
+// TODO: configurable?
+// TODO: timeout?
+const EXEC_OPTIONS: ExecOptions = {
+  maxBuffer: 2 ** 29, // 512MB,
+};
+
+async function runCommand(
   command: string,
-  stdin: Buffer
+  stdin?: Buffer
 ): Promise<{ stdout: string; stderr: string }> {
-  const execOption: ExecOptions = {
-    maxBuffer: EXEC_MAX_BUFFER,
-  };
   return new Promise((resolve, reject) => {
-    const proc = exec(command, execOption, (error, stdout, stderr) => {
+    const proc = exec(command, EXEC_OPTIONS, (error, stdout, stderr) => {
       if (error) {
         reject(error);
         return;
       }
       resolve({ stdout, stderr });
     });
-    if (!proc.stdin) {
-      reject(new Error("Unavailable stdin on spawned process"));
-      return;
+    if (stdin) {
+      if (!proc.stdin) {
+        reject(new Error("stdin not available for spawned process"));
+        return;
+      }
+      Readable.from(stdin).pipe(proc.stdin);
     }
-    Readable.from(stdin).pipe(proc.stdin);
   });
 }
 
 async function uriToBuffer(uri: vscode.Uri): Promise<Buffer> {
-  // Read Uri as Buffer
   let buffer: Buffer;
   if (uri.scheme == "file") {
     const data = await vscode.workspace.fs.readFile(uri);
@@ -54,65 +137,16 @@ async function uriToBuffer(uri: vscode.Uri): Promise<Buffer> {
   return buffer;
 }
 
-async function runConverter(
-  sourceUri: vscode.Uri,
-  converterConfig: ShellCommandConfig
-): Promise<string | undefined> {
-  // TODO: Show loading on status bar
-
-  const { command } = converterConfig;
-  const buffer = await uriToBuffer(sourceUri);
-
-  // Execute command
-  try {
-    const { stdout, stderr } = await runCommand(command, buffer);
-    if (stderr.length > 0) {
-      let message = ["Converter stderr:", stderr].join("\n");
-      vscode.window.showWarningMessage(message);
-    }
-    return stdout;
-  } catch (e) {
-    let message = "Converter command failed";
-    if (e instanceof Error) {
-      message += ": " + e.toString();
-    }
-    vscode.window.showErrorMessage(message);
-  }
-  return;
-}
-
+// TODO: implement following path patterns:
+// - xxx.ext
+// - xxx (shell).ext
+// - xxx (shell (2)).ext
+// - ...
 function formatPath(s: string): string {
   let { base, ...rest } = path.parse(s);
   if (base.includes(".")) {
     const [name, ...exts] = base.split(".");
-    base = [`${name} (pipe untitled)`, ...exts].join(".");
+    base = [`${name} (shell)`, ...exts].join(".");
   }
   return path.format({ base, ...rest });
-}
-
-// export for testing
-export async function showCommandContentAsUntitled(
-  sourceUri: vscode.Uri,
-  converterConfig: ShellCommandConfig
-): Promise<vscode.TextEditor> {
-  const content = await runConverter(sourceUri, converterConfig);
-
-  const uri = vscode.Uri.from({
-    scheme: "untitled",
-    path: formatPath(sourceUri.path), // TODO: Is it bad to have path name conflicts of "untitled" documents?
-    query: JSON.stringify({ converterConfig }), // Use query to differenciate different commands with path
-  });
-
-  const document = await vscode.workspace.openTextDocument(uri);
-
-  // TODO: Is streaming possible with this approach?
-  const editor = await vscode.window.showTextDocument(document);
-  new vscode.Range(0, 0, editor.document.lineCount, 0);
-  await editor.edit((builder) => {
-    builder.replace(
-      new vscode.Range(0, 0, document.lineCount, 0),
-      content ?? ""
-    );
-  });
-  return editor;
 }

@@ -1,9 +1,5 @@
 import * as vscode from "vscode";
-import {
-  formatCommand,
-  runCommand,
-  showCommandContentAsUntitled,
-} from "./shell";
+import { executeShellCommand } from "./shell";
 import { promptShellCommandSelection } from "./ui";
 import { EXT_COMMAND } from "./utils";
 
@@ -17,11 +13,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
 async function runShellShortcut(
   context: vscode.ExtensionContext,
-  sourceUri?: vscode.Uri
+  inputUri?: vscode.Uri
 ): Promise<void> {
   // `sourceUri` argument is available only when the command is invoked via "editor/title" or "explorer/context" menu.
   // otherwise we look for an active uri from the editor
-  sourceUri ??= vscode.window.activeTextEditor?.document.uri;
+  inputUri ??= vscode.window.activeTextEditor?.document.uri;
+  const fileName = inputUri?.fsPath;
+  const lineNumber = vscode.window.activeTextEditor?.selection.active.line;
 
   // show UI to input/select shell command
   const selected = await promptShellCommandSelection(context);
@@ -32,16 +30,6 @@ async function runShellShortcut(
     return;
   }
 
-  // open document with custom uri
-  const fileName = vscode.window.activeTextEditor?.document.fileName;
-  const line = vscode.window.activeTextEditor?.selection.active.line;
-  const command = formatCommand(selected.command, fileName, line);
-  await runCommand(command, Buffer.from(""));
-  if (true as any) return;
-
-  if (!sourceUri) {
-    vscode.window.showErrorMessage("no active editor");
-    return;
-  }
-  await showCommandContentAsUntitled(sourceUri, selected);
+  // execute
+  await executeShellCommand(selected, inputUri, fileName, lineNumber);
 }

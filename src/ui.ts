@@ -51,7 +51,7 @@ function createQuickPickInteraction(
 
     // Add entry for custom command input
     items.push({
-      label: "(custom command)",
+      label: "custom command >",
       [QUICK_PICK_ITEM_INTERNAL]: {
         converterConfig: { name: "", command: "" },
         continueInteraction: customCommandInteraction,
@@ -104,31 +104,6 @@ interface ConverterPickItem extends vscode.QuickPickItem {
   };
 }
 
-type PIPE_MODE = "NONE" | "IN" | "OUT" | "IN_OUT";
-
-interface PipeModePickItem extends vscode.QuickPickItem {
-  pipeMode: PIPE_MODE;
-}
-
-const PIPE_MODE_PICK_ITEMS: PipeModePickItem[] = [
-  {
-    label: "none",
-    pipeMode: "NONE",
-  },
-  {
-    label: "input only",
-    pipeMode: "NONE",
-  },
-  {
-    label: "output only",
-    pipeMode: "NONE",
-  },
-  {
-    label: "input and output",
-    pipeMode: "NONE",
-  },
-];
-
 function createCustomCommandInteraction(
   context: vscode.ExtensionContext
 ): ConverterPickInteraction {
@@ -153,37 +128,94 @@ function createCustomCommandInteraction(
         },
       },
     }));
-    const result = await showQuickPickInput(items, {
-      placeholder: "Input command (e.g. grep hello -)",
-      valueToItem: (value: string) => ({
-        label: value,
-        [QUICK_PICK_ITEM_INTERNAL]: {
-          converterConfig: {
-            name: "",
-            command: value,
+    const result: ConverterPickItem | undefined = await showQuickPickInput(
+      items,
+      {
+        placeholder: "Input command (e.g. grep hello -)",
+        valueToItem: (value: string) => ({
+          label: value,
+          [QUICK_PICK_ITEM_INTERNAL]: {
+            converterConfig: {
+              name: "",
+              command: value,
+            },
           },
-        },
-      }),
-    });
-    if (result) {
-      const resultPipeMode = await vscode.window.showQuickPick(
-        PIPE_MODE_PICK_ITEMS,
-        {
-          placeHolder: "Select pipe mode",
-        }
-      );
-      console.log(resultPipeMode);
-
-      // Update custom command history
-      const { command } = result[QUICK_PICK_ITEM_INTERNAL].converterConfig;
-      const index = commandHistory.indexOf(command);
-      if (index != -1) commandHistory.splice(index, 1);
-      commandHistory.unshift(command);
-      await context.globalState.update(
-        STATE_CUSTOM_COMMAND_HISTORY,
-        commandHistory.slice(0, STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES)
-      );
+        }),
+      }
+    );
+    if (!result) {
+      return;
     }
+
+    // select pipe mode
+    const resultPipeMode = await promptPipeModeSelection();
+    Object.assign(
+      result[QUICK_PICK_ITEM_INTERNAL].converterConfig,
+      resultPipeMode
+    );
+
+    // update custom command history
+    const { command } = result[QUICK_PICK_ITEM_INTERNAL].converterConfig;
+    const index = commandHistory.indexOf(command);
+    if (index != -1) {
+      commandHistory.splice(index, 1);
+    }
+    commandHistory.unshift(command);
+    await context.globalState.update(
+      STATE_CUSTOM_COMMAND_HISTORY,
+      commandHistory.slice(0, STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES)
+    );
     return result;
   };
+}
+
+//
+// promptPipeModeSelection
+//
+
+type PIPE_MODE = "NONE" | "IN" | "OUT" | "IN_OUT";
+
+interface PipeModePickItem extends vscode.QuickPickItem {
+  pipeMode: PIPE_MODE;
+}
+
+const PIPE_MODE_PICK_ITEMS: PipeModePickItem[] = [
+  {
+    label: "none",
+    pipeMode: "NONE",
+  },
+  {
+    label: "input only",
+    pipeMode: "IN",
+  },
+  {
+    label: "output only",
+    pipeMode: "OUT",
+  },
+  {
+    label: "input and output",
+    pipeMode: "IN_OUT",
+  },
+];
+
+async function promptPipeModeSelection(): Promise<{
+  pipeInput: boolean;
+  pipeOutput: boolean;
+}> {
+  const result = await vscode.window.showQuickPick(PIPE_MODE_PICK_ITEMS, {
+    placeHolder: "Select pipe mode",
+  });
+  let pipeInput = false;
+  let pipeOutput = false;
+  if (result?.pipeMode === "IN") {
+    pipeInput = true;
+  }
+  if (result?.pipeMode === "OUT") {
+    pipeOutput = true;
+  }
+  if (result?.pipeMode === "IN_OUT") {
+    pipeInput = true;
+    pipeOutput = true;
+  }
+  return { pipeInput, pipeOutput };
 }
