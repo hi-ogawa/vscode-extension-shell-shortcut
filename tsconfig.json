@@ -2,7 +2,7 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "build",
+    "outDir": "build/tsc",
     "module": "commonjs",
     "target": "es2019",
     "lib": ["ES2019"],

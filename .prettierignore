@@ -2,3 +2,4 @@
 /build
 /.vscode-test
 /src/test/demo-workspace
+/pnpm-lock.yaml

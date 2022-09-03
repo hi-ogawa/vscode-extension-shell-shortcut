@@ -2,7 +2,7 @@ name: ci
 "on":
   - push
 jobs:
-  prettier:
+  lint:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: "16.17.0"
       - run: pnpm i --frozen-lockfile
-      - run: npm run prettier:check
+      - run: npm run lint:check
   test:
     runs-on: ubuntu-20.04
     steps:

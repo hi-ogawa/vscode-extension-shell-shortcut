@@ -1,0 +1,22 @@
+{
+  "hi-ogawa.shell-shortcut": {
+    "commands": [
+      {
+        "name": "json prettify",
+        "command": "jq -M",
+        "pipeInput": true,
+        "pipeOutput": true
+      },
+      {
+        "name": "gzip decompress",
+        "command": "gunzip -c -",
+        "pipeInput": true,
+        "pipeOutput": true
+      },
+      {
+        "name": "open source.chromium.org",
+        "command": "filename=${__file__}; xdg-open \"https://source.chromium.org/chromium/chromium/src/+/main:${filename#*/src/};l=${__line__}\""
+      },
+    ]
+  },
+}
