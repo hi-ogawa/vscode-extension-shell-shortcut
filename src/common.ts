@@ -2,8 +2,7 @@ import * as vscode from "vscode";
 import { z } from "zod";
 
 export const EXT_ID = "hi-ogawa.shell-shortcut";
-export const EXT_COMMAND = "extension.shell-shortcut.run";
-const EXT_CONFIGURATION = "hi-ogawa.shell-shortcut";
+export const EXT_COMMAND = `${EXT_ID}.run`;
 
 // TODO: Accept `exec` options via `ConverterConfig`
 export const EXEC_MAX_BUFFER = 1 << 29; // 512MB
@@ -29,7 +28,7 @@ const DEFAULT_EXTENSION_CONFIG: ExtensionConfig = {
 };
 
 export function loadExtensionConfig(): ExtensionConfig {
-  const raw = vscode.workspace.getConfiguration().get(EXT_CONFIGURATION, {});
+  const raw = vscode.workspace.getConfiguration().get(EXT_ID, {});
   const parsed = EXTENSION_CONFIG_SCHEMA.safeParse(raw);
   if (!parsed.success) {
     vscode.window.showWarningMessage("failed to load config");

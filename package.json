@@ -14,30 +14,30 @@
   },
   "main": "./build/extension.js",
   "activationEvents": [
-    "onCommand:extension.shell-shortcut.run"
+    "onCommand:hi-ogawa.shell-shortcut.run"
   ],
   "contributes": {
     "commands": [
       {
         "title": "Run Shell Command",
-        "command": "extension.shell-shortcut.run",
+        "command": "hi-ogawa.shell-shortcut.run",
         "enablement": "resourceSet"
       }
     ],
     "menus": {
       "editor/title": [
         {
-          "command": "extension.shell-shortcut.run"
+          "command": "hi-ogawa.shell-shortcut.run"
         }
       ],
       "editor/title/context": [
         {
-          "command": "extension.shell-shortcut.run"
+          "command": "hi-ogawa.shell-shortcut.run"
         }
       ],
       "explorer/context": [
         {
-          "command": "extension.shell-shortcut.run"
+          "command": "hi-ogawa.shell-shortcut.run"
         }
       ]
     },
