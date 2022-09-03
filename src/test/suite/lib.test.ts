@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import { ConverterConfig, EXT_ID } from "../../common";
-import { showCommandContentAsUntitled } from "../../lib";
+import { showCommandContentAsUntitled } from "../../shell";
+import { EXT_ID, ShellCommandConfig } from "../../utils";
 import { CONVERTER_GUNZIP, CONVERTER_JQ, DEMO_WORKSPACE_URI } from "./misc";
 
 suite("lib.test", () => {
@@ -14,7 +14,7 @@ suite("lib.test", () => {
 
 type Show = (
   sourceUri: vscode.Uri,
-  converterConfig: ConverterConfig
+  converterConfig: ShellCommandConfig
 ) => Promise<vscode.TextEditor>;
 
 function testShow(show: Show): void {

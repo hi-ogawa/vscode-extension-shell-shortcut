@@ -4,10 +4,11 @@ import { z } from "zod";
 export const EXT_ID = "hi-ogawa.shell-shortcut";
 export const EXT_COMMAND = `${EXT_ID}.run`;
 
-// TODO: Accept `exec` options via `ConverterConfig`
-export const EXEC_MAX_BUFFER = 1 << 29; // 512MB
+//
+// extension configuration
+//
 
-const CONVER_CONFIG_SCHEMA = z.object({
+const SHELL_COMMAND_CONFIG_SCHEMA = z.object({
   name: z.string(),
   command: z.string(),
   pipeInput: z.boolean().optional(),
@@ -15,11 +16,10 @@ const CONVER_CONFIG_SCHEMA = z.object({
 });
 
 const EXTENSION_CONFIG_SCHEMA = z.object({
-  commands: z.array(CONVER_CONFIG_SCHEMA).default([]),
+  commands: z.array(SHELL_COMMAND_CONFIG_SCHEMA).default([]),
 });
 
-// TODO: rename to CommandConfig
-export type ConverterConfig = z.infer<typeof CONVER_CONFIG_SCHEMA>;
+export type ShellCommandConfig = z.infer<typeof SHELL_COMMAND_CONFIG_SCHEMA>;
 
 type ExtensionConfig = z.infer<typeof EXTENSION_CONFIG_SCHEMA>;
 

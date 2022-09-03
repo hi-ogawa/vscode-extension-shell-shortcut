@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { EXT_ID } from "../../common";
+import { EXT_ID } from "../../utils";
 
 suite("extension.test", () => {
   test("activate", async () => {
