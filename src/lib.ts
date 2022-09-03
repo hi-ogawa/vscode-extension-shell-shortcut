@@ -6,7 +6,7 @@ import {
   ConverterConfig,
   EXEC_MAX_BUFFER,
   EXT_COMMAND,
-  getMainConfig,
+  loadExtensionConfig,
 } from "./common";
 
 const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
@@ -290,7 +290,7 @@ async function converterCommandCallback(
   }
 
   // Load configuration
-  const mainConfig = getMainConfig();
+  const mainConfig = loadExtensionConfig();
 
   // Prompt to select converter via `QuickPick`
   let picked: ConverterPickItem | undefined;

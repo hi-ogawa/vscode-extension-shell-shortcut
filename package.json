@@ -1,5 +1,7 @@
 {
-  "name": "vscode-extension-shell-shortcut",
+  "publisher": "hi-ogawa",
+  "name": "shell-shortcut",
+  "displayName": "Shell Shortcut",
   "version": "0.0.0",
   "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut",
   "repository": {
@@ -7,8 +9,6 @@
     "url": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut"
   },
   "license": "MIT",
-  "publisher": "hi-ogawa",
-  "displayName": "Shell Shortcut",
   "engines": {
     "vscode": "^1.36.0"
   },
@@ -44,24 +44,35 @@
     "configuration": {
       "title": "shell-shortcut configuration",
       "properties": {
-        "hi-ogawa.shell-shortcut.commands": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "name",
-              "command"
-            ],
-            "properties": {
-              "name": {
-                "type": "string"
+        "hi-ogawa.shell-shortcut": {
+          "type": "object",
+          "properties": {
+            "commands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "command"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "command": {
+                    "type": "string"
+                  },
+                  "pipeInput": {
+                    "type": "boolean"
+                  },
+                  "pipeOutput": {
+                    "type": "boolean"
+                  }
+                }
               },
-              "command": {
-                "type": "string"
-              }
+              "default": []
             }
-          },
-          "default": []
+          }
         }
       }
     }
@@ -95,5 +106,8 @@
   },
   "volta": {
     "node": "16.17.0"
+  },
+  "dependencies": {
+    "zod": "^3.18.0"
   }
 }

@@ -1,17 +1,19 @@
 {
-  "hi-ogawa.shell-shortcut.commands": [
-    {
-      "name": "json prettify",
-      "command": "jq -M"
-    },
-    {
-      "name": "gzip decompress",
-      "command": "gunzip -c -"
-    },
-    {
-      "name": "open source.chromium.org",
-      // "command": "filename=${__file__}; xdg-open \"https://source.chromium.org/chromium/chromium/src/+/main:${filename:32};l=${__line__}\""
-      "command": "xdg-open 'https://source.chromium.org/chromium/chromium/src/+/main:content/shell/browser/shell.cc;l=${__line__}'"
-    },
-  ]
+  "hi-ogawa.shell-shortcut": {
+    "commands": [
+      {
+        "name": "json prettify",
+        "command": "jq -M"
+      },
+      {
+        "name": "gzip decompress",
+        "command": "gunzip -c -"
+      },
+      {
+        "name": "open source.chromium.org",
+        // "command": "filename=${__file__}; xdg-open \"https://source.chromium.org/chromium/chromium/src/+/main:${filename:32};l=${__line__}\""
+        "command": "xdg-open 'https://source.chromium.org/chromium/chromium/src/+/main:content/shell/browser/shell.cc;l=${__line__}'"
+      },
+    ]
+  },
 }
