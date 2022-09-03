@@ -2,6 +2,7 @@ import * as Mocha from "mocha";
 // @ts-ignore
 import { runMocha } from "mocha/lib/cli/run-helpers";
 
+// ts-prune-ignore-next
 export async function run(): Promise<void> {
   const mocha = new Mocha({
     ui: "tdd",

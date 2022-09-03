@@ -70,16 +70,27 @@
     "dev": "tsc --watch --preserveWatchOutput",
     "tsc": "tsc",
     "test": "node ./build/test/run-test.js",
-    "prettier": "prettier --write .",
-    "prettier:check": "prettier --check ."
+    "lint": "run-s prettier eslint ts-prune",
+    "lint:check": "run-s prettier:check eslint:check ts-prune",
+    "prettier": "prettier --write --cache .",
+    "prettier:check": "npm run prettier -- --check",
+    "eslint": "npm run eslint:check -- --fix",
+    "eslint:check": "eslint ./src --cache --ext .js,.jsx,.ts,.tsx",
+    "ts-prune": "ts-prune --error"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.11",
     "@types/vscode": "^1.36.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "@vscode/test-electron": "^1.6.2",
+    "eslint": "^8.23.0",
+    "eslint-plugin-import": "^2.26.0",
     "mocha": "^9.1.3",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.5.0",
+    "ts-prune": "^0.10.3",
     "typescript": "^4.5.2"
   },
   "volta": {

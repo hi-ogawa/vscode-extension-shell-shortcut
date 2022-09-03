@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
 import * as assert from "assert";
-import { showCommandContentAsUntitled } from "../../lib";
+import * as vscode from "vscode";
 import { ConverterConfig, EXT_ID } from "../../common";
-import { DEMO_WORKSPACE_URI, CONVERTER_JQ, CONVERTER_GUNZIP } from "./misc";
+import { showCommandContentAsUntitled } from "../../lib";
+import { CONVERTER_GUNZIP, CONVERTER_JQ, DEMO_WORKSPACE_URI } from "./misc";
 
 suite("lib.test", () => {
   setup(async () => {

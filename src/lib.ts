@@ -1,13 +1,13 @@
-import * as vscode from "vscode";
-import { exec, ExecOptions } from "child_process";
+import { ExecOptions, exec } from "child_process";
+import * as path from "path";
 import { Readable } from "stream";
+import * as vscode from "vscode";
 import {
-  EXT_COMMAND,
-  EXEC_MAX_BUFFER,
   ConverterConfig,
+  EXEC_MAX_BUFFER,
+  EXT_COMMAND,
   getMainConfig,
 } from "./common";
-import * as path from "path";
 
 const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";
@@ -272,7 +272,7 @@ function createQuickPickInteraction(
   };
 }
 
-export async function converterCommandCallback(
+async function converterCommandCallback(
   context: vscode.ExtensionContext,
   sourceUri?: vscode.Uri
 ): Promise<void> {

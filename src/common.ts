@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
 export const EXT_ID = "hi-ogawa.vscode-extension-shell-shortcut";
-export const EXT_CONFIGURATION = "hi-ogawa.shell-shortcut";
 export const EXT_COMMAND = "extension.shell-shortcut.run";
+const EXT_CONFIGURATION = "hi-ogawa.shell-shortcut";
 
 // TODO: Accept `exec` options via `ConverterConfig`
 export const EXEC_MAX_BUFFER = 1 << 29; // 512MB
@@ -13,11 +13,11 @@ export interface ConverterConfig {
   command: string;
 }
 
-export interface MainConfig {
+interface MainConfig {
   commands: ConverterConfig[];
 }
 
-export const DEFAULT_MAIN_CONFIG: MainConfig = {
+const DEFAULT_MAIN_CONFIG: MainConfig = {
   commands: [],
 };
 
