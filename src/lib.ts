@@ -180,6 +180,31 @@ interface ConverterPickItem extends vscode.QuickPickItem {
   };
 }
 
+type PIPE_MODE = "NONE" | "IN" | "OUT" | "IN_OUT";
+
+interface PipeModePickItem extends vscode.QuickPickItem {
+  pipeMode: PIPE_MODE;
+}
+
+const PIPE_MODE_PICK_ITEMS: PipeModePickItem[] = [
+  {
+    label: "none",
+    pipeMode: "NONE",
+  },
+  {
+    label: "input only",
+    pipeMode: "NONE",
+  },
+  {
+    label: "output only",
+    pipeMode: "NONE",
+  },
+  {
+    label: "input and output",
+    pipeMode: "NONE",
+  },
+];
+
 function createCustomCommandInteraction(
   context: vscode.ExtensionContext
 ): ConverterPickInteraction {
@@ -217,6 +242,14 @@ function createCustomCommandInteraction(
       }),
     });
     if (result) {
+      const resultPipeMode = await vscode.window.showQuickPick(
+        PIPE_MODE_PICK_ITEMS,
+        {
+          placeHolder: "Select pipe mode",
+        }
+      );
+      console.log(resultPipeMode);
+
       // Update custom command history
       const { command } = result[QUICK_PICK_ITEM_INTERNAL].converterConfig;
       const index = commandHistory.indexOf(command);
