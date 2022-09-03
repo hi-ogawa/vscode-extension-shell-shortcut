@@ -32,8 +32,3 @@ export function getMainConfig(): MainConfig {
   }
   return mainConfig;
 }
-
-export interface ProviderOptions {
-  sourceUri: vscode.Uri;
-  converterConfig: ConverterConfig;
-}
