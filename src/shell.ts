@@ -2,7 +2,8 @@ import { ExecOptions, exec } from "child_process";
 import * as path from "path";
 import { Readable } from "stream";
 import * as vscode from "vscode";
-import { EXT_ID, ShellCommandConfig, wrapReject } from "./utils";
+import { EXT_ID, ShellCommandConfig } from "./misc";
+import { wrapReject } from "./utils";
 
 const FILE_NAME_PLACEHOLDER = "${__file__}";
 const LINE_NUMBER_PLACEHOLDER = "${__line__}";

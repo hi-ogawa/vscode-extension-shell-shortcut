@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { ShellCommandConfig } from "../../utils";
+import { ShellCommandConfig } from "../../misc";
 
 const DEV_ROOT = path.resolve(__dirname, "../../..");
 

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
+import { EXT_COMMAND } from "./misc";
 import { executeShellCommand } from "./shell";
 import { promptShellCommandSelection } from "./ui";
-import { EXT_COMMAND } from "./utils";
 
 // ts-prune-ignore-next
 export function activate(context: vscode.ExtensionContext): void {
