@@ -3,9 +3,6 @@ import { exec, ExecOptions } from "child_process";
 import { Readable } from "stream";
 import {
   EXT_COMMAND,
-  EXT_SCHEME,
-  encodeUri,
-  decodeUri,
   EXEC_MAX_BUFFER,
   ConverterConfig,
   getMainConfig,
@@ -80,28 +77,6 @@ async function runConverter(
   return;
 }
 
-export class ContentProvider implements vscode.TextDocumentContentProvider {
-  async provideTextDocumentContent(
-    uri: vscode.Uri,
-    _token: vscode.CancellationToken
-  ): Promise<string | undefined> {
-    const { sourceUri, converterConfig } = decodeUri(uri);
-    return runConverter(sourceUri, converterConfig);
-  }
-}
-
-export async function showConverterUri(
-  sourceUri: vscode.Uri,
-  converterConfig: ConverterConfig
-): Promise<vscode.TextEditor> {
-  const uri = encodeUri({
-    sourceUri,
-    converterConfig,
-  });
-  const document = await vscode.workspace.openTextDocument(uri);
-  return vscode.window.showTextDocument(document);
-}
-
 function formatPath(s: string): string {
   let { base, ...rest } = path.parse(s);
   if (base.includes(".")) {
@@ -112,6 +87,7 @@ function formatPath(s: string): string {
 }
 
 // NOTE: It seems simply using "untitled" scheme is more convenient since it's editable and savable.
+// export for testing
 export async function showCommandContentAsUntitled(
   sourceUri: vscode.Uri,
   converterConfig: ConverterConfig
@@ -344,11 +320,7 @@ export async function converterCommandCallback(
   await runCommand(command, Buffer.from(""));
   if (true as any) return;
 
-  if (mainConfig.useUntitled) {
-    await showCommandContentAsUntitled(sourceUri, converterConfig);
-  } else {
-    await showConverterUri(sourceUri, converterConfig);
-  }
+  await showCommandContentAsUntitled(sourceUri, converterConfig);
 }
 
 function parseCommand(
@@ -364,21 +336,10 @@ function parseCommand(
 export function registerAll(
   context: vscode.ExtensionContext
 ): vscode.Disposable {
-  const contentProvider = new ContentProvider();
-
-  const contentProviderRegistration =
-    vscode.workspace.registerTextDocumentContentProvider(
-      EXT_SCHEME,
-      contentProvider
-    );
-
   const commandRegistration = vscode.commands.registerCommand(
     EXT_COMMAND,
     (...args: any[]) => converterCommandCallback(context, ...args)
   );
 
-  return vscode.Disposable.from(
-    contentProviderRegistration,
-    commandRegistration
-  );
+  return vscode.Disposable.from(commandRegistration);
 }

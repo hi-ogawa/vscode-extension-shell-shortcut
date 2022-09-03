@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as assert from "assert";
-import { showConverterUri, showCommandContentAsUntitled } from "../../lib";
+import { showCommandContentAsUntitled } from "../../lib";
 import { ConverterConfig, EXT_ID } from "../../common";
 import { DEMO_WORKSPACE_URI, CONVERTER_JQ, CONVERTER_GUNZIP } from "./misc";
 
@@ -9,10 +9,7 @@ suite("lib.test", () => {
     await vscode.extensions.getExtension(EXT_ID)!.activate();
   });
 
-  // Test two variants
-  for (const show of [showConverterUri, showCommandContentAsUntitled]) {
-    testShow(show);
-  }
+  testShow(showCommandContentAsUntitled);
 });
 
 type Show = (
