@@ -10,10 +10,8 @@ npm run test
 cp -r .vscode-example/. .vscode  # then hit F5 to open src/test/demo-workspace
 
 # publish to marketplace
-volta install vsce
-npm run tsc
-# TODO: need to bundle by ourselves (just use esbuild)
-vsce package --no-dependencies  # then upload to https://marketplace.visualstudio.com/manage/publishers/hi-ogawa
+volta install vsce  # install globally
+npm run package
 ```
 
 ## misc
