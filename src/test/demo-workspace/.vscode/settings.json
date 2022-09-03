@@ -3,11 +3,15 @@
     "commands": [
       {
         "name": "json prettify",
-        "command": "jq -M"
+        "command": "jq -M",
+        "pipeInput": true,
+        "pipeOutput": true
       },
       {
         "name": "gzip decompress",
-        "command": "gunzip -c -"
+        "command": "gunzip -c -",
+        "pipeInput": true,
+        "pipeOutput": true
       },
       {
         "name": "open source.chromium.org",
