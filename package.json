@@ -83,7 +83,7 @@
     "tsc:dev": "tsc --watch --preserveWatchOutput",
     "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
     "esbuild:dev": "npm run esbuild -- --watch",
-    "package": "npm run esbuild && vsce package --no-dependencies",
+    "package": "bash misc/package.sh",
     "test": "node ./build/tsc/test/run-test.js",
     "lint": "run-s prettier eslint ts-prune",
     "lint:check": "run-s prettier:check eslint:check ts-prune",
