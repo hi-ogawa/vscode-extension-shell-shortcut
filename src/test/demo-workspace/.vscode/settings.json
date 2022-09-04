@@ -2,18 +2,21 @@
   "hi-ogawa.shell-shortcut": {
     "commands": [
       {
+        // alternative https://github.com/euskadi31/vscode-json-pretty-printer
         "name": "json prettify",
         "command": "jq -M",
         "pipeInput": true,
         "pipeOutput": true
       },
       {
+        // alternative https://github.com/hyeongyun0916/GZIP_Decompressor
         "name": "gzip decompress",
         "command": "gunzip -c -",
         "pipeInput": true,
         "pipeOutput": true
       },
       {
+        // alternative https://github.com/song-fangzhen/chromium-source-opener
         "name": "open source.chromium.org",
         "command": "filename=${__file__}; xdg-open \"https://source.chromium.org/chromium/chromium/src/+/main:${filename#*/src/};l=${__line__}\""
       },
