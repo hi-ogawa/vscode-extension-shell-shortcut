@@ -18,6 +18,7 @@ pnpm lint
 pnpm test
 cp -r .vscode-example/. .vscode  # then hit F5 to open src/test/demo-workspace
 
-# publish to marketplace
+# publish dist/package/shell-shortcut-x.x.x.vsix to marketplace
+# https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 pnpm build
 ```
