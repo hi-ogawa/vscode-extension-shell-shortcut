@@ -1,7 +1,7 @@
 {
   "name": "shell-shortcut",
   "displayName": "Shell Shortcut",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut",
   "repository": {
     "type": "git",
