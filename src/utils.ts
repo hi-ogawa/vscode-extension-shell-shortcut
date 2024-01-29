@@ -9,7 +9,7 @@ function Err<E>(value: E): Result<never, E> {
 }
 
 export async function wrapReject<T>(
-  promise: Promise<T>
+  promise: Promise<T>,
 ): Promise<Result<T, unknown>> {
   try {
     const value = await promise;

@@ -12,7 +12,7 @@ export async function executeShellCommand(
   shellCommandConfig: ShellCommandConfig,
   inputUri?: vscode.Uri,
   fileName?: string,
-  lineNumber?: number
+  lineNumber?: number,
 ): Promise<void> {
   let { command, pipeInput, pipeOutput } = shellCommandConfig;
 
@@ -24,7 +24,7 @@ export async function executeShellCommand(
   if (pipeInput) {
     if (!inputUri) {
       vscode.window.showErrorMessage(
-        "cannot pipe input (no active document is found)"
+        "cannot pipe input (no active document is found)",
       );
       return;
     }
@@ -38,7 +38,7 @@ export async function executeShellCommand(
   if (command.includes(FILE_NAME_PLACEHOLDER)) {
     if (typeof fileName === "undefined") {
       vscode.window.showErrorMessage(
-        "pipe input (no active document is found)"
+        "pipe input (no active document is found)",
       );
       return;
     }
@@ -48,7 +48,7 @@ export async function executeShellCommand(
   if (command.includes(LINE_NUMBER_PLACEHOLDER)) {
     if (typeof lineNumber === "undefined") {
       vscode.window.showErrorMessage(
-        "cannot pipe input (no active document is found)"
+        "cannot pipe input (no active document is found)",
       );
       return;
     }
@@ -105,7 +105,7 @@ const EXEC_OPTIONS: ExecOptions = {
 
 async function runCommand(
   command: string,
-  stdin?: Buffer
+  stdin?: Buffer,
 ): Promise<{ stdout: string; stderr: string }> {
   return new Promise((resolve, reject) => {
     const proc = exec(command, EXEC_OPTIONS, (error, stdout, stderr) => {

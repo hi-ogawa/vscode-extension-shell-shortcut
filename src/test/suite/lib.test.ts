@@ -15,7 +15,7 @@ suite.skip("lib.test", () => {
 
 type Show = (
   sourceUri: vscode.Uri,
-  converterConfig: ShellCommandConfig
+  converterConfig: ShellCommandConfig,
 ) => Promise<vscode.TextEditor>;
 
 // @ts-expect-error
