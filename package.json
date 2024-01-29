@@ -16,7 +16,7 @@
     "dev:tsc": "tsc --watch --preserveWatchOutput",
     "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
     "dev:esbuild": "pnpm esbuild --watch",
-    "build": "bash misc/package.sh",
+    "build": "pnpm esbuild && bash misc/build.sh",
     "test": "node ./build/tsc/test/run-test.js",
     "lint": "pnpm run --sequential /^lint:/",
     "lint-check": "pnpm run --sequential /^lint-check:/",
