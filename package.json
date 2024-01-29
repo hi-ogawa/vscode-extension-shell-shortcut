@@ -1,5 +1,4 @@
 {
-  "publisher": "hi-ogawa",
   "name": "shell-shortcut",
   "displayName": "Shell Shortcut",
   "version": "0.0.1",
@@ -9,13 +8,24 @@
     "url": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut"
   },
   "license": "MIT",
-  "engines": {
-    "vscode": "^1.36.0"
-  },
+  "publisher": "hi-ogawa",
   "main": "./build/esbuild/extension.js",
-  "activationEvents": [
-    "onCommand:hi-ogawa.shell-shortcut.run"
-  ],
+  "scripts": {
+    "dev": "run-p tsc:dev esbuild:dev",
+    "tsc": "tsc",
+    "tsc:dev": "tsc --watch --preserveWatchOutput",
+    "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
+    "esbuild:dev": "npm run esbuild -- --watch",
+    "package": "bash misc/package.sh",
+    "test": "node ./build/tsc/test/run-test.js",
+    "lint": "run-s prettier eslint ts-prune",
+    "lint:check": "run-s prettier:check eslint:check ts-prune",
+    "prettier": "prettier --write --cache .",
+    "prettier:check": "npm run prettier -- --check",
+    "eslint": "npm run eslint:check -- --fix",
+    "eslint:check": "eslint ./src --cache --ext .js,.jsx,.ts,.tsx",
+    "ts-prune": "ts-prune --error"
+  },
   "contributes": {
     "commands": [
       {
@@ -77,21 +87,11 @@
       }
     }
   },
-  "scripts": {
-    "dev": "run-p tsc:dev esbuild:dev",
-    "tsc": "tsc",
-    "tsc:dev": "tsc --watch --preserveWatchOutput",
-    "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
-    "esbuild:dev": "npm run esbuild -- --watch",
-    "package": "bash misc/package.sh",
-    "test": "node ./build/tsc/test/run-test.js",
-    "lint": "run-s prettier eslint ts-prune",
-    "lint:check": "run-s prettier:check eslint:check ts-prune",
-    "prettier": "prettier --write --cache .",
-    "prettier:check": "npm run prettier -- --check",
-    "eslint": "npm run eslint:check -- --fix",
-    "eslint:check": "eslint ./src --cache --ext .js,.jsx,.ts,.tsx",
-    "ts-prune": "ts-prune --error"
+  "activationEvents": [
+    "onCommand:hi-ogawa.shell-shortcut.run"
+  ],
+  "dependencies": {
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
@@ -109,10 +109,10 @@
     "ts-prune": "^0.10.3",
     "typescript": "^4.5.2"
   },
+  "engines": {
+    "vscode": "^1.36.0"
+  },
   "volta": {
     "node": "16.17.0"
-  },
-  "dependencies": {
-    "zod": "^3.18.0"
   }
 }
