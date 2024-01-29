@@ -181,8 +181,8 @@ interface PipeModePickItem extends vscode.QuickPickItem {
 
 const PIPE_MODE_PICK_ITEMS: PipeModePickItem[] = [
   {
-    label: "none",
-    pipeMode: "NONE",
+    label: "input and output",
+    pipeMode: "IN_OUT",
   },
   {
     label: "input only",
@@ -193,8 +193,8 @@ const PIPE_MODE_PICK_ITEMS: PipeModePickItem[] = [
     pipeMode: "OUT",
   },
   {
-    label: "input and output",
-    pipeMode: "IN_OUT",
+    label: "none",
+    pipeMode: "NONE",
   },
 ];
 
