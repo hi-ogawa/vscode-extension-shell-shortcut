@@ -1,6 +1,7 @@
 # vscode-extension-shell-shortcut
 
-This extension allows executing shell commands from the editor and aims to replace various "ad-hoc" extensions e.g.
+This extension allows executing shell commands from the editor based on a currently opened file.
+As a generalized alternative, it can replace various single-purpose extensions e.g.
 
 - https://github.com/euskadi31/vscode-json-pretty-printer
 - https://github.com/hyeongyun0916/GZIP_Decompressor
