@@ -1,19 +1,14 @@
 {
+  "extends": "@tsconfig/strictest/tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "build/tsc",
-    "module": "commonjs",
-    "target": "es2019",
-    "lib": ["ES2019"],
-    "sourceMap": true,
-    "declaration": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true
-  }
+    "outDir": "dist/tsc",
+    "noUncheckedIndexedAccess": false,
+    "exactOptionalPropertyTypes": false,
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "types": [],
+  },
 }

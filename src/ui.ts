@@ -1,19 +1,19 @@
 import * as vscode from "vscode";
-import { ShellCommandConfig, loadExtensionConfig } from "./misc";
+import { type ShellCommandConfig, loadExtensionConfig } from "./misc";
 
 const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";
 const STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES = 20;
 
 export async function promptShellCommandSelection(
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
 ): Promise<ShellCommandConfig | undefined> {
   const mainConfig = loadExtensionConfig();
 
   let selected: ConverterPickItem | undefined;
   let interaction: ConverterPickInteraction = createQuickPickInteraction(
     mainConfig.commands,
-    context
+    context,
   );
   while (true) {
     selected = await interaction();
@@ -32,7 +32,7 @@ export async function promptShellCommandSelection(
 
 function createQuickPickInteraction(
   converterConfigs: ShellCommandConfig[],
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
 ): ConverterPickInteraction {
   return function () {
     const customCommandInteraction = createCustomCommandInteraction(context);
@@ -65,7 +65,7 @@ function createQuickPickInteraction(
 // cf. https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
 async function showQuickPickInput<T extends vscode.QuickPickItem>(
   items: T[],
-  options: { placeholder: string; valueToItem: (value: string) => T }
+  options: { placeholder: string; valueToItem: (value: string) => T },
 ): Promise<T | undefined> {
   return new Promise((resolve) => {
     const ui = vscode.window.createQuickPick<T>();
@@ -105,7 +105,7 @@ interface ConverterPickItem extends vscode.QuickPickItem {
 }
 
 function createCustomCommandInteraction(
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
 ): ConverterPickInteraction {
   // TODO:
   //   We cannot have an option to remove item from history since `IQuickPickItem.buttons` https://github.com/microsoft/vscode/blob/ff8f37a79626ede0265788192c406c95131dd7c5/src/vs/base/parts/quickinput/common/quickInput.ts#L39
@@ -115,7 +115,7 @@ function createCustomCommandInteraction(
   // Get custom command history
   const commandHistory = context.globalState.get<string[]>(
     STATE_CUSTOM_COMMAND_HISTORY,
-    []
+    [],
   );
 
   return async function (): Promise<ConverterPickItem | undefined> {
@@ -141,7 +141,7 @@ function createCustomCommandInteraction(
             },
           },
         }),
-      }
+      },
     );
     if (!result) {
       return;
@@ -151,7 +151,7 @@ function createCustomCommandInteraction(
     const resultPipeMode = await promptPipeModeSelection();
     Object.assign(
       result[QUICK_PICK_ITEM_INTERNAL].converterConfig,
-      resultPipeMode
+      resultPipeMode,
     );
 
     // update custom command history
@@ -163,7 +163,7 @@ function createCustomCommandInteraction(
     commandHistory.unshift(command);
     await context.globalState.update(
       STATE_CUSTOM_COMMAND_HISTORY,
-      commandHistory.slice(0, STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES)
+      commandHistory.slice(0, STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES),
     );
     return result;
   };

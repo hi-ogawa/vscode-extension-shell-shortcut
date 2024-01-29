@@ -1,9 +1,9 @@
-import * as Mocha from "mocha";
+import Mocha from "mocha";
 // @ts-ignore
 import { runMocha } from "mocha/lib/cli/run-helpers";
 
-// ts-prune-ignore-next
 export async function run(): Promise<void> {
+  // await import
   const mocha = new Mocha({
     ui: "tdd",
     color: true,

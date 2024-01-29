@@ -1,21 +1,29 @@
 {
-  "publisher": "hi-ogawa",
   "name": "shell-shortcut",
   "displayName": "Shell Shortcut",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut",
   "repository": {
     "type": "git",
     "url": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut"
   },
   "license": "MIT",
-  "engines": {
-    "vscode": "^1.36.0"
+  "publisher": "hi-ogawa",
+  "type": "commonjs",
+  "main": "./dist/esbuild/extension.js",
+  "scripts": {
+    "dev": "pnpm run --stream /^dev:/",
+    "tsc": "tsc",
+    "dev:tsc": "tsc --watch --preserveWatchOutput",
+    "esbuild": "esbuild src/extension.ts --outfile=dist/esbuild/extension.js --bundle --platform=node --external:vscode",
+    "dev:esbuild": "pnpm esbuild --watch",
+    "build": "pnpm esbuild && bash misc/build.sh",
+    "test": "node ./dist/tsc/test/run-test.js",
+    "lint": "pnpm run --sequential /^lint:/",
+    "lint-check": "pnpm run --sequential /^lint-check:/",
+    "lint:prettier": "prettier --write --cache .",
+    "lint-check:prettier": "prettier --check --cache ."
   },
-  "main": "./build/esbuild/extension.js",
-  "activationEvents": [
-    "onCommand:hi-ogawa.shell-shortcut.run"
-  ],
   "contributes": {
     "commands": [
       {
@@ -77,42 +85,25 @@
       }
     }
   },
-  "scripts": {
-    "dev": "run-p tsc:dev esbuild:dev",
-    "tsc": "tsc",
-    "tsc:dev": "tsc --watch --preserveWatchOutput",
-    "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
-    "esbuild:dev": "npm run esbuild -- --watch",
-    "package": "bash misc/package.sh",
-    "test": "node ./build/tsc/test/run-test.js",
-    "lint": "run-s prettier eslint ts-prune",
-    "lint:check": "run-s prettier:check eslint:check ts-prune",
-    "prettier": "prettier --write --cache .",
-    "prettier:check": "npm run prettier -- --check",
-    "eslint": "npm run eslint:check -- --fix",
-    "eslint:check": "eslint ./src --cache --ext .js,.jsx,.ts,.tsx",
-    "ts-prune": "ts-prune --error"
-  },
+  "activationEvents": [],
   "devDependencies": {
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.11",
-    "@types/vscode": "^1.36.0",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
-    "@vscode/test-electron": "^1.6.2",
-    "esbuild": "^0.15.6",
-    "eslint": "^8.23.0",
-    "eslint-plugin-import": "^2.26.0",
-    "mocha": "^9.1.3",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.5.0",
-    "ts-prune": "^0.10.3",
-    "typescript": "^4.5.2"
+    "@tsconfig/strictest": "^2.0.2",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.10",
+    "@types/vscode": "^1.75.0",
+    "@vscode/test-electron": "^2.3.9",
+    "@vscode/vsce": "^2.23.0",
+    "esbuild": "^0.20.0",
+    "mocha": "^10.2.0",
+    "prettier": "^3.2.4",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
   },
   "volta": {
-    "node": "16.17.0"
+    "node": "20.11.0"
   },
-  "dependencies": {
-    "zod": "^3.18.0"
-  }
+  "packageManager": "pnpm@8.15.0+sha256.fd1eab68a6d403f35cf3259c53780d70b0f14bd74e39da2f917d201f554d8665"
 }
