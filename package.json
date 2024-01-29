@@ -15,7 +15,7 @@
     "tsc": "tsc",
     "dev:tsc": "tsc --watch --preserveWatchOutput",
     "esbuild": "esbuild src/extension.ts --outfile=build/esbuild/extension.js --bundle --platform=node --external:vscode",
-    "dev:esbuild": "pnpm esbuild -- --watch",
+    "dev:esbuild": "pnpm esbuild --watch",
     "package": "bash misc/package.sh",
     "test": "node ./build/tsc/test/run-test.js",
     "lint": "pnpm run --sequential /^lint:/",
@@ -84,10 +84,11 @@
       }
     }
   },
+  "activationEvents": [],
   "devDependencies": {
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.75.0",
     "@vscode/test-electron": "^2.3.9",
     "esbuild": "^0.20.0",
     "mocha": "^10.2.0",
