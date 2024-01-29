@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
-import { EXT_ID, ShellCommandConfig } from "../../misc";
+import { EXT_ID, type ShellCommandConfig } from "../../misc";
 import { CONVERTER_GUNZIP, CONVERTER_JQ, DEMO_WORKSPACE_URI } from "./misc";
 
 // TODO: fix test

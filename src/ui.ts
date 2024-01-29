@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ShellCommandConfig, loadExtensionConfig } from "./misc";
+import { type ShellCommandConfig, loadExtensionConfig } from "./misc";
 
 const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";

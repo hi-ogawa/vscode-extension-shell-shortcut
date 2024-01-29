@@ -19,7 +19,6 @@ export async function wrapReject<T>(
   }
 }
 
-// ts-prune-ignore-next
 export function wrapError<T>(f: () => T): Result<T, unknown> {
   try {
     const value = f();

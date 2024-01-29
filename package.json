@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "publisher": "hi-ogawa",
+  "type": "commonjs",
   "main": "./dist/esbuild/extension.js",
   "scripts": {
     "dev": "pnpm run --stream /^dev:/",
@@ -86,6 +87,7 @@
   },
   "activationEvents": [],
   "devDependencies": {
+    "@tsconfig/strictest": "^2.0.2",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",
     "@types/vscode": "^1.75.0",

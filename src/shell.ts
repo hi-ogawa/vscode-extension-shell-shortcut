@@ -1,8 +1,8 @@
-import { ExecOptions, exec } from "child_process";
+import { type ExecOptions, exec } from "child_process";
 import * as path from "path";
 import { Readable } from "stream";
 import * as vscode from "vscode";
-import { EXT_ID, ShellCommandConfig } from "./misc";
+import { EXT_ID, type ShellCommandConfig } from "./misc";
 import { wrapReject } from "./utils";
 
 const FILE_NAME_PLACEHOLDER = "${__file__}";
