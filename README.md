@@ -20,5 +20,5 @@ cp -r .vscode-example/. .vscode  # then hit F5 to open src/test/demo-workspace
 
 # publish to marketplace
 volta install vsce  # install globally
-pnpm package
+pnpm build
 ```
