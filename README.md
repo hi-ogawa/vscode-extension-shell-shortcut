@@ -13,12 +13,12 @@ See [`src/test/demo-workspace/.vscode/settings.json`](https://github.com/hi-ogaw
 
 ```sh
 pnpm i
-npm run dev
-npm run prettier
-npm run test
+pnpm dev
+pnpm lint
+pnpm test
 cp -r .vscode-example/. .vscode  # then hit F5 to open src/test/demo-workspace
 
 # publish to marketplace
 volta install vsce  # install globally
-npm run package
+pnpm package
 ```
