@@ -1,5 +1,5 @@
 node_modules
-build
+dist
 .vscode-test
 src/test/demo-workspace
 pnpm-lock.yaml
