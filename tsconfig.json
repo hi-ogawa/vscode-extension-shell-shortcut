@@ -2,7 +2,7 @@
   "extends": "@tsconfig/strictest/tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
-    "outDir": "dist/tsc",
+    "noEmit": true,
     "noUncheckedIndexedAccess": false,
     "exactOptionalPropertyTypes": false,
     "moduleResolution": "Node",
