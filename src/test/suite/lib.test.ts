@@ -2,11 +2,12 @@ import * as assert from "assert";
 import * as vscode from "vscode";
 import { EXT_ID, type ShellCommandConfig } from "../../misc";
 import { CONVERTER_GUNZIP, CONVERTER_JQ, DEMO_WORKSPACE_URI } from "./misc";
+import { describe, test, before } from "mocha";
 
 // TODO: fix test
 
-suite.skip("lib.test", () => {
-  setup(async () => {
+describe.skip("lib.test", () => {
+  before(async () => {
     await vscode.extensions.getExtension(EXT_ID)!.activate();
   });
 
@@ -20,7 +21,7 @@ type Show = (
 
 // @ts-expect-error
 function testShow(show: Show): void {
-  suite(show.name, () => {
+  describe(show.name, () => {
     test("jq", async () => {
       // Demo json file
       const uri = vscode.Uri.joinPath(DEMO_WORKSPACE_URI, "ex00.json");
