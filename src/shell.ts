@@ -3,7 +3,7 @@ import * as path from "path";
 import { Readable } from "stream";
 import * as vscode from "vscode";
 import { EXT_ID, type ShellCommandConfig } from "./misc";
-import { wrapReject } from "./utils";
+import { wrapErrorAsync } from "@hiogawa/utils";
 
 const FILE_NAME_PLACEHOLDER = "${__file__}";
 const LINE_NUMBER_PLACEHOLDER = "${__line__}";
@@ -59,7 +59,7 @@ export async function executeShellCommand(
   // execute
   //
 
-  const result = await wrapReject(runCommand(command, input));
+  const result = await wrapErrorAsync(() => runCommand(command, input));
 
   if (!result.ok) {
     let message = `shell command error`;
