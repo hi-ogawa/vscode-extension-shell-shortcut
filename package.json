@@ -100,11 +100,11 @@
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
+  "packageManager": "pnpm@8.15.0+sha256.fd1eab68a6d403f35cf3259c53780d70b0f14bd74e39da2f917d201f554d8665",
   "engines": {
     "vscode": "^1.75.0"
   },
   "volta": {
     "node": "20.11.0"
-  },
-  "packageManager": "pnpm@8.15.0+sha256.fd1eab68a6d403f35cf3259c53780d70b0f14bd74e39da2f917d201f554d8665"
+  }
 }

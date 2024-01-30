@@ -71,15 +71,21 @@ async function showQuickPickInput<T extends vscode.QuickPickItem>(
   const ui = vscode.window.createQuickPick<T>();
   ui.placeholder = options.placeholder;
   ui.items = items;
+
+  // need to disable `sortByLabel` (proposed api) to avoid flickering when manipulating first entry
+  // https://github.com/microsoft/vscode/pull/77297
+  (ui as any).sortByLabel = false;
+
   ui.onDidChangeValue((value) => {
     if (value) {
       ui.items = [
-        // https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
         // prepending a first entry to simulate "auto suggest" input box
-        // TODO: this will flicker the dropdown. maybe we can keep fake first entry with `alwaysShow: true` and then just mutate a label here?
-        options.valueToItem(value),
+        // https://github.com/microsoft/vscode/issues/89601
+        { ...options.valueToItem(value), alwaysShow: true },
         ...items,
       ];
+    } else {
+      ui.items = items;
     }
   });
   ui.onDidAccept(() => {
