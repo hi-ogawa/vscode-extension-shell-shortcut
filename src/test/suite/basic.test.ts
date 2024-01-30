@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { EXT_ID } from "../../misc";
 import { COMMAND_GUNZIP, COMMAND_JQ, DEMO_WORKSPACE_URI } from "./misc";
 import { describe, test, before } from "mocha";
-import { assert } from "chai";
+import assert from "node:assert";
 import { executeShellCommand } from "../../shell";
 
 describe(executeShellCommand.name, () => {
