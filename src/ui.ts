@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { type ShellCommandConfig, loadExtensionConfig, EXT_ID } from "./misc";
+import { createManualPromise } from "@hiogawa/utils";
 
 const QUICK_PICK_ITEM_INTERNAL = `${EXT_ID}:QUICK_PICK_ITEM_INTERNAL`;
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";
@@ -67,31 +68,30 @@ async function showQuickPickInput<T extends vscode.QuickPickItem>(
   items: T[],
   options: { placeholder: string; valueToItem: (value: string) => T },
 ): Promise<T | undefined> {
-  return new Promise((resolve) => {
-    const ui = vscode.window.createQuickPick<T>();
-    ui.placeholder = options.placeholder;
-    ui.items = items;
-    // TODO: Debounce input change
-    ui.onDidChangeValue((value) => {
-      let newItems = Array.from(items);
-      if (value) {
-        newItems.unshift({
-          alwaysShow: true, // This helps reducing flickering of picker dropdown
-          ...options.valueToItem(value),
-        });
-      }
-      ui.items = newItems;
-    });
-    ui.onDidAccept(() => {
-      resolve(ui.selectedItems[0]);
-    });
-    ui.onDidHide(() => {
-      resolve(undefined);
-      ui.dispose();
-    });
-    ui.show();
-    return;
+  const promise = createManualPromise<T | undefined>();
+  const ui = vscode.window.createQuickPick<T>();
+  ui.placeholder = options.placeholder;
+  ui.items = items;
+  // TODO: Debounce input change
+  ui.onDidChangeValue((value) => {
+    let newItems = Array.from(items);
+    if (value) {
+      newItems.unshift({
+        alwaysShow: true, // This helps reducing flickering of picker dropdown
+        ...options.valueToItem(value),
+      });
+    }
+    ui.items = newItems;
   });
+  ui.onDidAccept(() => {
+    promise.resolve(ui.selectedItems[0]);
+  });
+  ui.onDidHide(() => {
+    promise.resolve(undefined);
+    ui.dispose();
+  });
+  ui.show();
+  return promise;
 }
 
 type ConverterPickInteraction = () => Thenable<ConverterPickItem | undefined>;

@@ -3,7 +3,7 @@ import * as path from "path";
 import { Readable } from "stream";
 import * as vscode from "vscode";
 import { EXT_ID, type ShellCommandConfig } from "./misc";
-import { wrapErrorAsync } from "@hiogawa/utils";
+import { wrapErrorAsync, createManualPromise } from "@hiogawa/utils";
 
 const FILE_NAME_PLACEHOLDER = "${__file__}";
 const LINE_NUMBER_PLACEHOLDER = "${__line__}";
@@ -107,22 +107,22 @@ async function runCommand(
   command: string,
   stdin?: Buffer,
 ): Promise<{ stdout: string; stderr: string }> {
-  return new Promise((resolve, reject) => {
-    const proc = exec(command, EXEC_OPTIONS, (error, stdout, stderr) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve({ stdout, stderr });
-    });
-    if (stdin) {
-      if (!proc.stdin) {
-        reject(new Error("stdin not available for spawned process"));
-        return;
-      }
+  const promise = createManualPromise<{ stdout: string; stderr: string }>();
+  const proc = exec(command, EXEC_OPTIONS, (error, stdout, stderr) => {
+    if (error) {
+      promise.reject(error);
+      return;
+    }
+    promise.resolve({ stdout, stderr });
+  });
+  if (stdin) {
+    if (!proc.stdin) {
+      promise.reject(new Error("stdin not available for spawned process"));
+    } else {
       Readable.from(stdin).pipe(proc.stdin);
     }
-  });
+  }
+  return promise;
 }
 
 async function uriToBuffer(uri: vscode.Uri): Promise<Buffer> {
