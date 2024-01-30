@@ -63,7 +63,6 @@ function createQuickPickInteraction(
   };
 }
 
-// cf. https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
 async function showQuickPickInput<T extends vscode.QuickPickItem>(
   items: T[],
   options: { placeholder: string; valueToItem: (value: string) => T },
@@ -72,16 +71,16 @@ async function showQuickPickInput<T extends vscode.QuickPickItem>(
   const ui = vscode.window.createQuickPick<T>();
   ui.placeholder = options.placeholder;
   ui.items = items;
-  // TODO: Debounce input change
   ui.onDidChangeValue((value) => {
-    let newItems = Array.from(items);
     if (value) {
-      newItems.unshift({
-        alwaysShow: true, // This helps reducing flickering of picker dropdown
-        ...options.valueToItem(value),
-      });
+      ui.items = [
+        // https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
+        // prepending a first entry to simulate "auto suggest" input box
+        // TODO: this will flicker the dropdown. maybe we can keep fake first entry with `alwaysShow: true` and then just mutate a label here?
+        options.valueToItem(value),
+        ...items,
+      ];
     }
-    ui.items = newItems;
   });
   ui.onDidAccept(() => {
     promise.resolve(ui.selectedItems[0]);
