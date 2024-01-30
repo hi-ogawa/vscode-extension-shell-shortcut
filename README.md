@@ -11,7 +11,7 @@ See [`src/test/demo-workspace/.vscode/settings.json`](https://github.com/hi-ogaw
 
 <details><summary>Show Demo</summary>
 
-[Screencast](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/assets/4232207/e180a208-46e4-4396-a282-359389912137)
+[Screencast](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/assets/4232207/0e81d4f9-ac1f-49e9-8281-46d789384e52)
 
 </details>
 
