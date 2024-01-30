@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
-import { type ShellCommandConfig, loadExtensionConfig } from "./misc";
+import { type ShellCommandConfig, loadExtensionConfig, EXT_ID } from "./misc";
+import { createManualPromise } from "@hiogawa/utils";
 
-const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
+const QUICK_PICK_ITEM_INTERNAL = `${EXT_ID}:QUICK_PICK_ITEM_INTERNAL`;
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";
 const STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES = 20;
 
@@ -62,36 +63,34 @@ function createQuickPickInteraction(
   };
 }
 
-// cf. https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
 async function showQuickPickInput<T extends vscode.QuickPickItem>(
   items: T[],
   options: { placeholder: string; valueToItem: (value: string) => T },
 ): Promise<T | undefined> {
-  return new Promise((resolve) => {
-    const ui = vscode.window.createQuickPick<T>();
-    ui.placeholder = options.placeholder;
-    ui.items = items;
-    // TODO: Debounce input change
-    ui.onDidChangeValue((value) => {
-      let newItems = Array.from(items);
-      if (value) {
-        newItems.unshift({
-          alwaysShow: true, // This helps reducing flickering of picker dropdown
-          ...options.valueToItem(value),
-        });
-      }
-      ui.items = newItems;
-    });
-    ui.onDidAccept(() => {
-      resolve(ui.selectedItems[0]);
-    });
-    ui.onDidHide(() => {
-      resolve(undefined);
-      ui.dispose();
-    });
-    ui.show();
-    return;
+  const promise = createManualPromise<T | undefined>();
+  const ui = vscode.window.createQuickPick<T>();
+  ui.placeholder = options.placeholder;
+  ui.items = items;
+  ui.onDidChangeValue((value) => {
+    if (value) {
+      ui.items = [
+        // https://github.com/microsoft/vscode/issues/89601#issuecomment-580133277
+        // prepending a first entry to simulate "auto suggest" input box
+        // TODO: this will flicker the dropdown. maybe we can keep fake first entry with `alwaysShow: true` and then just mutate a label here?
+        options.valueToItem(value),
+        ...items,
+      ];
+    }
   });
+  ui.onDidAccept(() => {
+    promise.resolve(ui.selectedItems[0]);
+  });
+  ui.onDidHide(() => {
+    promise.resolve(undefined);
+    ui.dispose();
+  });
+  ui.show();
+  return promise;
 }
 
 type ConverterPickInteraction = () => Thenable<ConverterPickItem | undefined>;
@@ -202,6 +201,7 @@ async function promptPipeModeSelection(): Promise<{
   pipeInput: boolean;
   pipeOutput: boolean;
 }> {
+  // TODO: handle cancel
   const result = await vscode.window.showQuickPick(PIPE_MODE_PICK_ITEMS, {
     placeHolder: "Select pipe mode",
   });
