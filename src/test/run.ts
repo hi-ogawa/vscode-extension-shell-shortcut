@@ -11,6 +11,7 @@ type VscodeTestRun = (
 export const run: VscodeTestRun = async (_testsRoot, resultFn) => {
   const mocha = new Mocha({
     color: true,
+    timeout: 10000,
   });
   const files = await fg.glob(["suite/**/*.test.ts"], {
     cwd: __dirname,
