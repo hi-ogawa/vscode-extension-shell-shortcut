@@ -9,6 +9,12 @@ It can function as an alternative for various single-purpose extensions, e.g.
 
 See [`src/test/demo-workspace/.vscode/settings.json`](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/blob/master/src/test/demo-workspace/.vscode/settings.json) for a sample configuration.
 
+<details><summary>Show Demo</summary>
+
+[Screencast](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/assets/4232207/e180a208-46e4-4396-a282-359389912137)
+
+</details>
+
 ## development
 
 ```sh
