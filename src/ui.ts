@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { type ShellCommandConfig, loadExtensionConfig } from "./misc";
+import { type ShellCommandConfig, loadExtensionConfig, EXT_ID } from "./misc";
 
-const QUICK_PICK_ITEM_INTERNAL = "__HIROSHI_INTERNAL__"; // Symbol doesn't seem to work
+const QUICK_PICK_ITEM_INTERNAL = `${EXT_ID}:QUICK_PICK_ITEM_INTERNAL`;
 const STATE_CUSTOM_COMMAND_HISTORY = "custom-command-history-v1";
 const STATE_CUSTOM_COMMAND_HISTORY_MAX_ENTRIES = 20;
 
@@ -202,6 +202,7 @@ async function promptPipeModeSelection(): Promise<{
   pipeInput: boolean;
   pipeOutput: boolean;
 }> {
+  // TODO: handle cancel
   const result = await vscode.window.showQuickPick(PIPE_MODE_PICK_ITEMS, {
     placeHolder: "Select pipe mode",
   });

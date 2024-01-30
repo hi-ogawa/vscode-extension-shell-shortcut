@@ -87,6 +87,7 @@
   },
   "activationEvents": [],
   "devDependencies": {
+    "@hiogawa/utils": "1.6.1-pre.10",
     "@tsconfig/strictest": "^2.0.2",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",
