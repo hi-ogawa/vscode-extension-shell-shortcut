@@ -8,8 +8,4 @@ rm -rf "$dest_dir"
 mkdir -p "$dest_dir/dist"
 cp package.json README.md LICENSE.txt "$dest_dir"
 cp dist/extension.js "$dest_dir/dist"
-cd "$dest_dir"
-
-# vsce package
-# vsce publish
-vsce ${@}
+cd "$dest_dir" && vsce package

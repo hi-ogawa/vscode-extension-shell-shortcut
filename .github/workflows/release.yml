@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: 20
       - run: pnpm i
-      - run: pnpm release
+      - run: pnpm build
+      - run: cd dist/package && npx vsce publish
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
