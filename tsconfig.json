@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/strictest/tsconfig.json",
-  "include": ["src", ".vscode-test.mjs"],
+  "include": ["src"],
   "compilerOptions": {
     "noEmit": true,
     "verbatimModuleSyntax": true,
