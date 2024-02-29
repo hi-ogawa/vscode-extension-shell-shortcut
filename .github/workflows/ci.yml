@@ -21,8 +21,5 @@ jobs:
         with:
           run: pnpm test
       - run: pnpm test-e2e-setup
-      - run: ls $PWD/node_modules/.cache/extest/*
       - name: pnpm test-e2e
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: pnpm test-e2e
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test-e2e
