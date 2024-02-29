@@ -8,7 +8,7 @@ export default defineConfig({
     testTimeout: process.env.CI ? 60_000 : Infinity,
     env: {
       CODE_VERSION: "1.86.2",
-      TEST_RESOURCES: "node_modules/.cache/extest",
+      TEST_RESOURCES: process.cwd() + "/node_modules/.cache/extest",
     },
   },
 });

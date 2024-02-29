@@ -21,6 +21,7 @@ jobs:
         with:
           run: pnpm test
       - run: pnpm test-e2e-setup
+      - run: ls $PWD/node_modules/.cache/extest/*
       - name: pnpm test-e2e
         uses: coactions/setup-xvfb@v1
         with:
