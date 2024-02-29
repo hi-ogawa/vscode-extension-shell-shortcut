@@ -1,52 +1,46 @@
-import { download } from "@vscode/test-electron";
-import { test as base } from "vitest";
-import { _electron } from "@playwright/test";
 import { sleep } from "@hiogawa/utils";
+import nodePath from "node:path";
+import {
+  ExTester,
+  InputBox,
+  ReleaseQuality,
+  TextEditor,
+  VSBrowser,
+  VSCODE_VERSION_MAX,
+  Workbench,
+} from "vscode-extension-tester";
 
-type VscodeType = typeof import("vscode");
+// add a few helpers to improve Workbench API
+class WorkbenchExtra extends Workbench {
+  getTextEditor = () => new TextEditor();
 
-// proxy
-//   vscode instance
-// just eval? require("vscode")
-// eval
-// window
+  getInputBox = () => new InputBox();
 
-type VscodePage = {};
-
-type TestFixture = {
-  page: {
-    x: number;
+  openWorkspaceFile = async (filename: string) => {
+    let input = await this.openCommandPrompt();
+    await input.setText(filename);
+    await input.confirm();
   };
-};
 
-export const test = base.extend<TestFixture>({
-  // page: async ({}, use) => {
-  //   `const vscode = require("vscode")`;
-  //   await use(0);
-  // }
-  page: {
-    x: 0,
-  },
-});
-
-export async function setupVscode() {
-  const downloadPath = await download();
-  const app = await _electron.launch({
-    executablePath: downloadPath,
-    args: [""],
-  });
-  //
-  // `require("vscode")` electron main process?
-  app.evaluateHandle;
-  const page = await app.firstWindow();
-  return { app, page };
+  pause = () => sleep(1000_000);
 }
 
-test("basic", ({ page }) => {
-  page;
-});
-
-export async function pause() {
-  // TODO:
-  await sleep(2 ** 30);
+export async function launchVscode(options: { workspacePath?: string }) {
+  const browser = new VSBrowser(VSCODE_VERSION_MAX, ReleaseQuality.Stable);
+  // [PATCH] customArgs for vscode-extension-tester
+  const customArgs = [
+    "--skip-welcome",
+    "--disable-updates",
+    "--skip-release-notes",
+    "--disable-workspace-trust",
+  ];
+  if (options.workspacePath) {
+    customArgs.push(
+      `--folder-uri=file:${nodePath.resolve(options.workspacePath)}`,
+    );
+  }
+  await browser.start((new ExTester() as any).code.executablePath, customArgs);
+  await browser.waitForWorkbench();
+  const workbench = new WorkbenchExtra();
+  return { browser, workbench };
 }

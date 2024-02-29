@@ -1,0 +1,36 @@
+diff --git a/out/browser.d.ts b/out/browser.d.ts
+index 4524f14b6c49c172930caae0d25251b6ea009b51..c88da070b628e308dd92a4efadae91a54a49ecb7 100644
+--- a/out/browser.d.ts
++++ b/out/browser.d.ts
+@@ -16,7 +16,7 @@ export declare class VSBrowser {
+      * Starts the vscode browser from a given path
+      * @param codePath path to code binary
+      */
+-    start(codePath: string): Promise<VSBrowser>;
++    start(codePath: string, customArgs?: string[]): Promise<VSBrowser>;
+     /**
+      * Returns a reference to the underlying instance of Webdriver
+      */
+diff --git a/out/browser.js b/out/browser.js
+index 5d23afcdc642a2aec48b2281c6645e1ebc37e7c9..b8cfe8746bb29b9575f3d348c9014cde77739ced 100644
+--- a/out/browser.js
++++ b/out/browser.js
+@@ -57,7 +57,7 @@ class VSBrowser {
+      * Starts the vscode browser from a given path
+      * @param codePath path to code binary
+      */
+-    start(codePath) {
++    start(codePath, customArgs) {
+         return __awaiter(this, void 0, void 0, function* () {
+             const userSettings = path.join(this.storagePath, 'settings', 'User');
+             if (fs.existsSync(userSettings)) {
+@@ -93,6 +93,9 @@ class VSBrowser {
+                 }
+                 args.push(`--extensionDevelopmentPath=${process.cwd()}`);
+             }
++            if (customArgs) {
++                args.push(...customArgs);
++            }
+             let options = new chrome_1.Options().setChromeBinaryPath(codePath).addArguments(...args);
+             options['options_'].windowTypes = ['webview'];
+             options = options;
