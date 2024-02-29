@@ -18,7 +18,9 @@
     "build": "tsup && bash misc/build.sh",
     "dev:tsup": "tsup --watch",
     "test": "vscode-test",
-    "test-e2e": "vitest",
+    "test-e2e": "vitest -c vitest.config.e2e.ts",
+    "test-e2e-setup": "export TEST_RESOURCES=node_modules/.cache/extest && extest get-vscode && extest get-chromedriver && extest install-vsix -f dist/package/shell-shortcut-0.0.8.vsix",
+    "test-e2e-repl": "node -r tsx/cjs -r ./src/test-e2e/repl.ts",
     "lint": "pnpm run --sequential /^lint:/",
     "lint-check": "pnpm run --sequential /^lint-check:/",
     "lint:prettier": "prettier --write --cache .",
@@ -101,6 +103,8 @@
     "tsup": "^8.0.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
+    "vitest": "^1.3.1",
+    "vscode-extension-tester": "^7.2.0",
     "zod": "^3.22.4"
   },
   "packageManager": "pnpm@8.15.0+sha256.fd1eab68a6d403f35cf3259c53780d70b0f14bd74e39da2f917d201f554d8665",
@@ -109,5 +113,10 @@
   },
   "volta": {
     "node": "20.11.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vscode-extension-tester@7.2.0": "patches/vscode-extension-tester@7.2.0.patch"
+    }
   }
 }
