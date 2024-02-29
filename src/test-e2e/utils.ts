@@ -1,4 +1,5 @@
 import { sleep } from "@hiogawa/utils";
+import nodePath from "node:path";
 import {
   ExTester,
   InputBox,
@@ -26,11 +27,19 @@ class WorkbenchExtra extends Workbench {
 
 export async function launchVscode(options: { workspacePath?: string }) {
   const browser = new VSBrowser(VSCODE_VERSION_MAX, ReleaseQuality.Stable);
-  await browser.start((new ExTester() as any).code.executablePath);
+  // [PATCH] customArgs for vscode-extension-tester
+  const customArgs = [
+    "--skip-welcome",
+    "--disable-updates",
+    "--skip-release-notes",
+    "--disable-workspace-trust",
+  ];
   if (options.workspacePath) {
-    // TODO: use --folderUri ?
-    await browser.openResources(options.workspacePath);
+    customArgs.push(
+      `--folder-uri=file:${nodePath.resolve(options.workspacePath)}`,
+    );
   }
+  await browser.start((new ExTester() as any).code.executablePath, customArgs);
   await browser.waitForWorkbench();
   const workbench = new WorkbenchExtra();
   return { browser, workbench };

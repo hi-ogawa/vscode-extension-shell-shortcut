@@ -113,5 +113,10 @@
   },
   "volta": {
     "node": "20.11.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "vscode-extension-tester@7.2.0": "patches/vscode-extension-tester@7.2.0.patch"
+    }
   }
 }
