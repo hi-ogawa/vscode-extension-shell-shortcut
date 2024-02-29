@@ -1,7 +1,6 @@
 import { test } from "vitest";
 import { download } from "@vscode/test-electron";
 import { _electron } from "@playwright/test";
-import { sleep } from "@hiogawa/utils";
 
 test("basic", async () => {
   const vscodePath = await download();
