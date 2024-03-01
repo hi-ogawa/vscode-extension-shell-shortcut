@@ -19,5 +19,5 @@ jobs:
       - name: pnpm test
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test
       # - run: pnpm test-e2e-setup
-      # - name: pnpm test-e2e
-      #   run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test-e2e
+      - name: pnpm test-e2e
+        run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test-e2e basic2.test.ts
