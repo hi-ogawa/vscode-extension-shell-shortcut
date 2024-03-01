@@ -15,11 +15,22 @@ test("basic", async () => {
       "--skip-welcome",
       "--skip-release-notes",
       "--disable-workspace-trust",
+      `--folder-uri=${workspacePath}`,
       `--extensionDevelopmentPath=${extensionPath}`,
-      `--folderUri=${workspacePath}`,
     ],
   });
 
   const page = await app.firstWindow();
-  await page.pause();
+
+  await page.getByLabel("ex00.json", { exact: true }).locator("a").click();
+  await page.getByLabel("Files Explorer").press("CapsLock");
+  await page.getByLabel("Files Explorer").press("Control+Shift+P");
+  await page
+    .getByPlaceholder("Type the name of a command to")
+    .fill(">run shel");
+  await page.getByPlaceholder("Type the name of a command to").press("Enter");
+  await page.getByLabel("input").fill("json prettify");
+  await page.getByLabel("input").press("Enter");
+
+  await app.close();
 });
