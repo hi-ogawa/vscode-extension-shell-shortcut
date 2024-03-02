@@ -7,7 +7,7 @@ import { tinyassert } from "@hiogawa/utils";
 // TODO:
 // - vitest fixture
 
-test("basic", async () => {
+test("demo", async () => {
   const vscodePath = await download();
   const extensionPath = new URL("../..", import.meta.url);
   const workspacePath = new URL("./src/test/demo-workspace", extensionPath);
