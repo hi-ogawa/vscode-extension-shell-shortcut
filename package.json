@@ -89,6 +89,7 @@
   "activationEvents": [],
   "devDependencies": {
     "@hiogawa/utils": "1.6.1-pre.10",
+    "@hiogawa/vscode-e2e": "workspace:0.0.0-pre.0",
     "@playwright/test": "^1.42.0",
     "@tsconfig/strictest": "^2.0.2",
     "@types/mocha": "^10.0.6",

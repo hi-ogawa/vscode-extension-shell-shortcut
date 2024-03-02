@@ -36,7 +36,7 @@ async function vscodeProxyHandler(
   const reqJson: ProxyRequest = JSON.parse(reqBody);
   tinyassert(typeof reqJson.fnString === "string", `invalid body: ${reqJson}`);
 
-  const f = (0, eval)(reqJson.fnString);
+  const f = (0, eval)(reqJson.fnString)(); // indirect eval
   tinyassert(typeof f === "function", `invalid code: ${reqJson.fnString}`);
 
   const result = await f(vscode);
