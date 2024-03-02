@@ -1,32 +1,43 @@
 import { download } from "@vscode/test-electron";
 import { _electron } from "@playwright/test";
 import { executeVscode } from "./proxy/client";
-import { sleep, typedBoolean } from "@hiogawa/utils";
+import { sleep } from "@hiogawa/utils";
 import nodeUrl from "node:url";
 
 export async function launchVscodeTest(options: {
-  extensionPath: string; // TODO: optional
+  extensionPath?: string;
   workspacePath?: string;
+  disableVscodeProxy?: boolean;
+  args?: (args: string[]) => void;
 }) {
-  const vscodePath = await download(); // silence log? // TODO: optional
-  const vscodeProxyPath = new URL("./server.cjs", import.meta.url);
+  const executablePath = await download(); // silence log? // TODO: optional
+  const args = [
+    // cf. https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L41
+    "--no-sandbox",
+    "--disable-gpu-sandbox",
+    "--disable-updates",
+    "--skip-welcome",
+    "--skip-release-notes",
+    "--disable-workspace-trust",
+  ];
+  if (options.extensionPath) {
+    args.push(`--extensionDevelopmentPath=${options.extensionPath}`);
+  }
+  if (options.workspacePath) {
+    args.push(`--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`);
+  }
+  if (!options.disableVscodeProxy) {
+    const vscodeProxyPath = new URL("./server.cjs", import.meta.url);
+    args.push(`--extensionTestsPath=${vscodeProxyPath}`);
+  }
+  options.args?.(args);
   const app = await _electron.launch({
-    executablePath: vscodePath,
-    // TODO: customize args
-    args: [
-      "--no-sandbox",
-      "--disable-gpu-sandbox",
-      "--disable-updates",
-      "--skip-welcome",
-      "--skip-release-notes",
-      "--disable-workspace-trust",
-      `--extensionDevelopmentPath=${options.extensionPath}`,
-      `--extensionTestsPath=${vscodeProxyPath}`, // TODO: optional vscode proxy
-      options.workspacePath &&
-        `--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`,
-    ].filter(typedBoolean),
+    executablePath: executablePath,
+    args,
   });
-  await waitFor(() => executeVscode(() => true));
+  if (!options.disableVscodeProxy) {
+    await waitFor(() => executeVscode(() => true));
+  }
   return app;
 }
 
