@@ -1,7 +1,7 @@
 import { download } from "@vscode/test-electron";
 import { _electron } from "@playwright/test";
 import { executeVscode } from "./proxy/client";
-import { sleep, tinyassert } from "@hiogawa/utils";
+import { sleep } from "@hiogawa/utils";
 
 export async function launchVscode(options: { workspacePath: string }) {
   const vscodePath = await download();
