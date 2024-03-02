@@ -3,7 +3,7 @@ import { EXT_COMMAND } from "./misc";
 import { executeShellCommand } from "./shell";
 import { promptShellCommandSelection } from "./ui";
 
-export function activate(context: vscode.ExtensionContext): void {
+export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand(EXT_COMMAND, (...args) =>
     runShellShortcut(context, ...args),
   );
