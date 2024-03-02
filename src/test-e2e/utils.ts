@@ -1,12 +1,14 @@
 import { download } from "@vscode/test-electron";
 import { _electron } from "@playwright/test";
 import { executeVscode } from "./proxy/client";
-import { sleep } from "@hiogawa/utils";
+import { sleep, typedBoolean } from "@hiogawa/utils";
+import nodeUrl from "node:url";
 
-export async function launchVscode(options: { workspacePath: string }) {
-  const vscodePath = await download();
-  const extensionPath = new URL("../..", import.meta.url);
-  const workspacePath = new URL(options.workspacePath, extensionPath);
+export async function launchVscodeTest(options: {
+  extensionPath: string;
+  workspacePath?: string;
+}) {
+  const vscodePath = await download(); // silence log?
   const vscodeProxyPath = new URL(
     "./proxy/server-wrapper.cjs",
     import.meta.url,
@@ -20,14 +22,14 @@ export async function launchVscode(options: { workspacePath: string }) {
       "--skip-welcome",
       "--skip-release-notes",
       "--disable-workspace-trust",
-      `--folder-uri=${workspacePath}`,
-      `--extensionDevelopmentPath=${extensionPath}`,
+      `--extensionDevelopmentPath=${options.extensionPath}`,
       `--extensionTestsPath=${vscodeProxyPath}`,
-    ],
+      options.workspacePath &&
+        `--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`,
+    ].filter(typedBoolean),
   });
-  const page = await app.firstWindow();
   await waitFor(() => executeVscode(() => true));
-  return { app, page, executeVscode };
+  return app;
 }
 
 async function waitFor<T>(f: () => Promise<T>) {
