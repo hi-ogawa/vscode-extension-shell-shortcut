@@ -21,6 +21,7 @@
     "test-e2e": "vitest -c vitest.config.e2e.ts",
     "test-e2e-setup": "export TEST_RESOURCES=node_modules/.cache/extest && extest get-vscode && extest get-chromedriver && extest install-vsix -f dist/package/shell-shortcut-0.0.8.vsix",
     "test-e2e-repl": "node -r tsx/cjs -r ./src/test-e2e/repl.ts",
+    "test-e2e-repl2": "node -r tsx/cjs -r ./src/test-e2e/repl2.ts",
     "lint": "pnpm run --sequential /^lint:/",
     "lint-check": "pnpm run --sequential /^lint-check:/",
     "lint:prettier": "prettier --write --cache .",
