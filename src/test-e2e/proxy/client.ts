@@ -1,4 +1,3 @@
-import { tinyassert } from "@hiogawa/utils";
 import { PROXY_PORT, type ProxyRequest, type ProxyResponse } from "./shared";
 
 export async function executeVscode<T>(
@@ -8,7 +7,9 @@ export async function executeVscode<T>(
     method: "POST",
     body: JSON.stringify({ fnString: f.toString() } satisfies ProxyRequest),
   });
-  tinyassert(res.ok);
+  if (!res.ok) {
+    throw new Error(await res.text());
+  }
   const resJson: ProxyResponse = await res.json();
   return resJson.result as any;
 }
