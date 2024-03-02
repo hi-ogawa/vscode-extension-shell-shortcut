@@ -20,3 +20,7 @@ jobs:
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test
       - name: pnpm test-e2e
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test-e2e
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          path: test-results
