@@ -13,9 +13,9 @@ export async function run() {
       await vscodeProxyHandler(req, res);
     } catch (e) {
       res.statusCode = 500;
-      res.end(
-        e instanceof Error ? e.stack ?? e.message : "Internal Server Error",
-      );
+      const message =
+        e instanceof Error ? e.stack ?? e.message : "Internal Server Error";
+      res.end(message);
     }
   });
 
@@ -26,8 +26,6 @@ export async function run() {
   // keep it running
   await new Promise(() => {});
 }
-
-// TODO: propagate error (tiny-rpc?)
 
 async function vscodeProxyHandler(
   req: http.IncomingMessage,
