@@ -1,3 +1,4 @@
+// TODO: config? find unused port?
 export const PROXY_PORT = 19293;
 
 export type ProxyRequest = {

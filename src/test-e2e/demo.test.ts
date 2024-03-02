@@ -1,18 +1,8 @@
-import { expect, test, vi } from "vitest";
-import { launchVscode } from "./utils";
+import { expect, vi } from "vitest";
 import { executeVscode } from "./proxy/client";
+import { vscodeTest } from "./utils-test";
 
-test("demo", async () => {
-  const { app, page } = await launchVscode({
-    workspacePath: "./src/test/demo-workspace",
-  });
-
-  // wait for vscode proxy server
-  await vi.waitFor(() => executeVscode(() => true), {
-    interval: 500,
-    timeout: 10000,
-  });
-
+vscodeTest("demo", async ({ page }) => {
   // open ex00.json
   await page.getByLabel("ex00.json", { exact: true }).locator("a").click();
 
@@ -22,7 +12,7 @@ test("demo", async () => {
   // run shell command extension
   await page
     .getByPlaceholder("Type the name of a command to")
-    .fill(">run shel");
+    .fill(">run shell");
   await page.getByPlaceholder("Type the name of a command to").press("Enter");
   await page.getByLabel("input").fill("json prettify");
   await page.getByLabel("input").press("Enter");
@@ -45,6 +35,4 @@ test("demo", async () => {
     }
     "
   `);
-
-  await app.close();
 });
