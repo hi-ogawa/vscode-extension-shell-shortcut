@@ -33,7 +33,7 @@ export async function launchVscodeTest(options: {
 async function waitFor<T>(f: () => Promise<T>) {
   let ms = 100;
   let error: unknown;
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 6; i++) {
     if (i > 0) {
       await sleep((ms *= 2));
     }

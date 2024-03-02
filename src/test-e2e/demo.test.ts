@@ -1,8 +1,9 @@
 import { expect, vi, beforeEach } from "vitest";
-import { executeVscode } from "./proxy/client";
-import { vscodeTest } from "./utils-vitest";
+import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
+import { executeVscode } from "@hiogawa/vscode-e2e";
 
 beforeEach(({ task }) => {
+  task.meta.vscodeExtensionPath = process.cwd();
   task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
 });
 

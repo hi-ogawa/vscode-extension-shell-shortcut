@@ -1,5 +1,4 @@
-import { executeVscode } from "./proxy/client";
-import { launchVscodeTest } from "./utils";
+import { launchVscodeTest, executeVscode } from "@hiogawa/vscode-e2e";
 
 async function main() {
   const app = await launchVscodeTest({
