@@ -2,7 +2,7 @@
 
 Using [Playwright Electron](https://playwright.dev/docs/api/class-electron) for VS Code Extension E2E testing
 
-TODO: demo image
+TODO: example, demo image
 
 ## references
 
