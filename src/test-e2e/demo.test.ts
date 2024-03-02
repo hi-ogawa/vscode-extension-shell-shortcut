@@ -1,7 +1,6 @@
 import { expect, test, vi } from "vitest";
-import type { CodeRequest, CodeResponse } from "./vscode-proxy-impl";
-import { tinyassert } from "@hiogawa/utils";
 import { launchVscode } from "./utils";
+import { executeVscode } from "./proxy/client";
 
 test("demo", async () => {
   const { app, page } = await launchVscode({
@@ -49,15 +48,3 @@ test("demo", async () => {
 
   await app.close();
 });
-
-async function executeVscode<T>(
-  f: (vscode: typeof import("vscode")) => T,
-): Promise<Awaited<T>> {
-  const res = await fetch("http://localhost:8989", {
-    method: "POST",
-    body: JSON.stringify({ code: f.toString() } satisfies CodeRequest),
-  });
-  tinyassert(res.ok);
-  const resJson: CodeResponse = await res.json();
-  return resJson.result as any;
-}

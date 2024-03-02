@@ -1,11 +1,15 @@
 import { download } from "@vscode/test-electron";
 import { _electron } from "@playwright/test";
+import { executeVscode } from "./proxy/client";
 
 export async function launchVscode(options: { workspacePath: string }) {
   const vscodePath = await download();
   const extensionPath = new URL("../..", import.meta.url);
   const workspacePath = new URL(options.workspacePath, extensionPath);
-  const vscodeProxyPath = new URL("./vscode-proxy.cjs", import.meta.url);
+  const vscodeProxyPath = new URL(
+    "./proxy/server-wrapper.cjs",
+    import.meta.url,
+  );
   const app = await _electron.launch({
     executablePath: vscodePath,
     args: [
@@ -21,5 +25,5 @@ export async function launchVscode(options: { workspacePath: string }) {
     ],
   });
   const page = await app.firstWindow();
-  return { app, page };
+  return { app, page, executeVscode };
 }
