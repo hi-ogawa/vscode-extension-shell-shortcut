@@ -1,6 +1,6 @@
-# VS Code Extension E2E
+# vscode-e2e
 
-Use [Playwright Electron](https://playwright.dev/docs/api/class-electron) with Vitest
+Using [Playwright Electron](https://playwright.dev/docs/api/class-electron) for VS Code Extension E2E testing
 
 TODO: demo image
 
