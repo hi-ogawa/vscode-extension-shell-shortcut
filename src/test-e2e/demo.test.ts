@@ -5,6 +5,7 @@ import { executeVscode } from "@hiogawa/vscode-e2e";
 beforeEach(({ task }) => {
   task.meta.vscodeExtensionPath = process.cwd();
   task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
+  task.meta.trace = "on";
 });
 
 vscodeTest("demo", async ({ page }) => {

@@ -11,6 +11,7 @@ export type VscodeTestFixture = {
 export interface VscodeTestTaskMeta {
   vscodeExtensionPath?: string;
   vscodeWorkspacePath?: string;
+  vscodeTrace?: "on" | "off";
 }
 
 declare module "vitest" {
@@ -30,22 +31,25 @@ export const vscodeTest: TestAPI<VscodeTestFixture> =
     },
     page: async ({ app, task }, use) => {
       const page = await app.firstWindow();
-      // TODO: config tracing
-      await page.context().tracing.start({
-        title: task.name,
-        screenshots: true,
-        snapshots: true,
-      });
+      if (task.meta.vscodeTrace === "on") {
+        await page.context().tracing.start({
+          title: task.name,
+          screenshots: true,
+          snapshots: true,
+        });
+      }
       await use(page);
-      await page.context().tracing.stop({
-        path: nodePath.resolve(
-          `test-results`,
-          [nodePath.basename(task.file?.filepath!), task.name, task.id]
-            .filter(Boolean)
-            .join("-")
-            .replaceAll(/\W/g, "-"),
-          "trace.zip",
-        ),
-      });
+      if (task.meta.vscodeTrace === "on") {
+        await page.context().tracing.stop({
+          path: nodePath.resolve(
+            "test-results",
+            [nodePath.basename(task.file?.filepath!), task.name, task.id]
+              .filter(Boolean)
+              .join("-")
+              .replaceAll(/\W/g, "-"),
+            "trace.zip",
+          ),
+        });
+      }
     },
   });
