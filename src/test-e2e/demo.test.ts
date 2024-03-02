@@ -1,6 +1,10 @@
-import { expect, vi } from "vitest";
+import { expect, vi, beforeEach } from "vitest";
 import { executeVscode } from "./proxy/client";
-import { vscodeTest } from "./utils-test";
+import { vscodeTest } from "./utils-vitest";
+
+beforeEach(({ task }) => {
+  task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
+});
 
 vscodeTest("demo", async ({ page }) => {
   // open ex00.json
