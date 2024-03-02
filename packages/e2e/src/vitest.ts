@@ -1,6 +1,6 @@
 import { launchVscodeTest } from "./utils";
 import { test, type TestAPI } from "vitest";
-import npath from "node:path";
+import nodePath from "node:path";
 import type { ElectronApplication, Page } from "@playwright/test";
 
 export type VscodeTestFixture = {
@@ -31,18 +31,16 @@ export const vscodeTest: TestAPI<VscodeTestFixture> =
     page: async ({ app, task }, use) => {
       const page = await app.firstWindow();
       // TODO: config tracing
-      await page
-        .context()
-        .tracing.start({
-          title: task.name,
-          screenshots: true,
-          snapshots: true,
-        });
+      await page.context().tracing.start({
+        title: task.name,
+        screenshots: true,
+        snapshots: true,
+      });
       await use(page);
       await page.context().tracing.stop({
-        path: npath.resolve(
+        path: nodePath.resolve(
           `test-results`,
-          [npath.basename(task.file?.filepath!), task.name, task.id]
+          [nodePath.basename(task.file?.filepath!), task.name, task.id]
             .filter(Boolean)
             .join("-")
             .replaceAll(/\W/g, "-"),
