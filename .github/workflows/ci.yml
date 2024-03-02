@@ -12,11 +12,11 @@ jobs:
       - run: corepack enable
       - run: pnpm i
       - run: pnpm lint-check
-      - run: pnpm tsc
       - run: pnpm build
+      - run: pnpm -r build
+      - run: pnpm tsc
       - name: pnpm test
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test
-      - run: pnpm -C packages/e2e build
       - name: pnpm test-e2e
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test-e2e
       - uses: actions/upload-artifact@v3
