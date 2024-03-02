@@ -4,3 +4,4 @@ dist
 .vscode-test
 !/src/test/demo-workspace/.vscode
 *.vsix
+test-results
