@@ -8,6 +8,8 @@ import nodeUrl from "node:url";
 // --extensions-dir
 // --user-data-dir
 
+// TODO: can we get stdout/stderr log from electorn binary?
+
 export async function launchVscode(options: {
   extensionPath?: string;
   workspacePath?: string;
@@ -39,6 +41,10 @@ export async function launchVscode(options: {
   const app = await _electron.launch({
     executablePath: executablePath,
     args,
+    // TODO: use env to pass proxy port?
+    env: {
+      ...(process.env as any),
+    },
   });
   if (options.enableProxy) {
     await waitFor(() => executeVscode(() => true));
