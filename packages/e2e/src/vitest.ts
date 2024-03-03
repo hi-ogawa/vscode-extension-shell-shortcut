@@ -12,6 +12,7 @@ export interface VscodeTestTaskMeta {
   vscodeExtensionPath?: string;
   vscodeWorkspacePath?: string;
   vscodeTrace?: "on" | "off";
+  vscodeProxy?: boolean;
 }
 
 declare module "vitest" {
@@ -25,6 +26,7 @@ export const vscodeTest: TestAPI<VscodeTestFixture> =
       const app = await launchVscode({
         extensionPath: task.meta.vscodeExtensionPath,
         workspacePath: task.meta.vscodeWorkspacePath,
+        enableProxy: task.meta.vscodeProxy,
       });
       await use(app);
       await app.close();

@@ -4,10 +4,14 @@ import { executeVscode } from "./proxy/client";
 import { sleep } from "@hiogawa/utils";
 import nodeUrl from "node:url";
 
+// TODO:
+// --extensions-dir
+// --user-data-dir
+
 export async function launchVscode(options: {
   extensionPath?: string;
   workspacePath?: string;
-  disableVscodeProxy?: boolean;
+  enableProxy?: boolean;
   args?: (args: string[]) => void;
 }) {
   const executablePath = await download(); // silence log? // TODO: optional
@@ -27,7 +31,7 @@ export async function launchVscode(options: {
   if (options.workspacePath) {
     args.push(`--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`);
   }
-  if (!options.disableVscodeProxy) {
+  if (options.enableProxy) {
     const vscodeProxyPath = new URL("./server.cjs", import.meta.url);
     args.push(`--extensionTestsPath=${vscodeProxyPath}`);
   }
@@ -36,7 +40,7 @@ export async function launchVscode(options: {
     executablePath: executablePath,
     args,
   });
-  if (!options.disableVscodeProxy) {
+  if (options.enableProxy) {
     await waitFor(() => executeVscode(() => true));
   }
   return app;
