@@ -1,6 +1,6 @@
 {
   "name": "@hiogawa/vscode-e2e",
-  "version": "0.0.1-pre.1",
+  "version": "0.0.1",
   "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut/tree/main/packages/e2e",
   "repository": {
     "type": "git",
