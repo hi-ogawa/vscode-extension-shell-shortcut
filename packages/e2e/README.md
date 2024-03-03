@@ -75,10 +75,10 @@ const page = await app.firstWindow();
 await page.pause();
 ```
 
-## References
+## Credits
 
-Inspired by:
+Inspired by following projects
 
-https://github.com/microsoft/playwright-vscode/pull/353
-https://github.com/webdriverio-community/wdio-vscode-service/
-https://github.com/redhat-developer/vscode-extension-tester/
+- https://github.com/microsoft/playwright-vscode/pull/353
+- https://github.com/webdriverio-community/wdio-vscode-service/
+- https://github.com/redhat-developer/vscode-extension-tester/
