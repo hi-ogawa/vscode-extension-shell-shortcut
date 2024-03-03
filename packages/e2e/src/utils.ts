@@ -21,7 +21,9 @@ export async function launchVscode(options: {
     "--disable-workspace-trust",
   ];
   if (options.extensionPath) {
-    args.push(`--extensionDevelopmentPath=${options.extensionPath}`);
+    args.push(
+      `--extensionDevelopmentPath=${nodeUrl.pathToFileURL(options.extensionPath)}`,
+    );
   }
   if (options.workspacePath) {
     args.push(`--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`);
