@@ -1,12 +1,13 @@
 import { launch } from "./utils";
 import { test, type TestAPI } from "vitest";
 import nodePath from "node:path";
-import type { Page } from "playwright";
+import type { ElectronApplication, Page } from "playwright";
+import type { ExecuteVscode } from ".";
 
 export type VscodeTestFixture = {
   _launch: Awaited<ReturnType<typeof launch>>;
-  app: VscodeTestFixture["_launch"]["app"];
-  execute: VscodeTestFixture["_launch"]["execute"];
+  app: ElectronApplication;
+  execute: ExecuteVscode;
   page: Page;
 };
 
