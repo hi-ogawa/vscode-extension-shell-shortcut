@@ -1,6 +1,6 @@
 import { download } from "@vscode/test-electron";
 import { _electron } from "playwright";
-import { executeVscode } from "./proxy/client";
+import { VscodeProxyClient } from "./proxy/client";
 import { sleep, tinyassert } from "@hiogawa/utils";
 import nodeUrl from "node:url";
 import nodeHttp from "node:http";
@@ -11,16 +11,21 @@ import nodeHttp from "node:http";
 
 // TODO: can we get stdout/stderr log from electorn binary?
 
-export async function launchVscode(options: {
+export async function launch(options: {
+  vscodePath?: string;
   extensionPath?: string;
   workspacePath?: string;
   enableProxy?: boolean;
   args?: (args: string[]) => void;
 }) {
-  const executablePath = await download(); // silence log? // TODO: optional
+  // download by default
+  const executablePath = options.vscodePath ?? (await download());
+
+  // launch args
   const extensionDevelopmentPath = options.extensionPath
     ? nodeUrl.pathToFileURL(options.extensionPath)
     : new URL("../misc/empty-extension", import.meta.url);
+  const vscodeProxyPath = new URL("./server.cjs", import.meta.url);
   const args = [
     // cf. https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L41
     "--no-sandbox",
@@ -30,26 +35,31 @@ export async function launchVscode(options: {
     "--skip-release-notes",
     "--disable-workspace-trust",
     `--extensionDevelopmentPath=${extensionDevelopmentPath}`,
+    `--extensionTestsPath=${vscodeProxyPath}`,
   ];
   if (options.workspacePath) {
     args.push(`--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`);
   }
-  let env = { ...(process.env as any) };
-  if (options.enableProxy) {
-    const vscodeProxyPath = new URL("./server.cjs", import.meta.url);
-    args.push(`--extensionTestsPath=${vscodeProxyPath}`);
-    env["VSCODE_E2E_PROXY_PORT"] = await findAvailablePort();
-  }
   options.args?.(args);
+
+  // find port for vscode proxy
+  const proxyPort = await findAvailablePort();
+
+  // launch app
   const app = await _electron.launch({
     executablePath: executablePath,
     args,
-    env,
+    env: {
+      ...(process.env as any),
+      VSCODE_E2E_PROXY_PORT: proxyPort,
+    },
   });
-  if (options.enableProxy) {
-    await waitFor(() => executeVscode(() => true));
-  }
-  return app;
+
+  // setup vscode proxy
+  const proxyClient = new VscodeProxyClient(proxyPort);
+  waitFor(() => proxyClient.execute(() => true));
+
+  return { app, execute: proxyClient.execute };
 }
 
 async function waitFor<T>(f: () => Promise<T>) {
@@ -74,7 +84,7 @@ async function findAvailablePort(): Promise<number> {
     server.on("error", (e) => {
       reject(e);
     });
-    server.listen({}, () => {
+    server.listen(() => {
       const address = server.address();
       tinyassert(address && typeof address === "object");
       server.close(() => {

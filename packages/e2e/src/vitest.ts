@@ -1,10 +1,12 @@
-import { launchVscode } from "./utils";
+import { launch } from "./utils";
 import { test, type TestAPI } from "vitest";
 import nodePath from "node:path";
-import type { ElectronApplication, Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 export type VscodeTestFixture = {
-  app: ElectronApplication;
+  _launch: Awaited<ReturnType<typeof launch>>;
+  app: VscodeTestFixture["_launch"]["app"];
+  execute: VscodeTestFixture["_launch"]["execute"];
   page: Page;
 };
 
@@ -22,14 +24,20 @@ declare module "vitest" {
 // cf. https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L59
 export const vscodeTest: TestAPI<VscodeTestFixture> =
   test.extend<VscodeTestFixture>({
-    app: async ({ task }, use) => {
-      const app = await launchVscode({
+    _launch: async ({ task }, use) => {
+      const _launch = await launch({
         extensionPath: task.meta.vscodeExtensionPath,
         workspacePath: task.meta.vscodeWorkspacePath,
         enableProxy: task.meta.vscodeProxy,
       });
+      await use(_launch);
+      await _launch.app.close();
+    },
+    app: async ({ _launch: { app } }, use) => {
       await use(app);
-      await app.close();
+    },
+    execute: async ({ _launch: { execute } }, use) => {
+      await use(execute);
     },
     page: async ({ app, task }, use) => {
       const page = await app.firstWindow();

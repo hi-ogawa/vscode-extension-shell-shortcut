@@ -5,7 +5,7 @@ export default defineConfig({
     dir: "./src/test-e2e",
     // Infinity on local for `page.pause()`
     testTimeout: process.env.CI ? 60_000 : Infinity,
-    // Cannot spawn multiple vscode proxy
+    // Need to separatee user-data-dir to launch multiple apps at the same time?
     fileParallelism: false,
   },
 });

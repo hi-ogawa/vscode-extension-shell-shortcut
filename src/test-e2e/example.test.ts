@@ -1,13 +1,12 @@
 import { expect, beforeEach } from "vitest";
 import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
-import { executeVscode } from "@hiogawa/vscode-e2e";
 
 beforeEach(({ task }) => {
   task.meta.vscodeTrace = "on";
   task.meta.vscodeProxy = true;
 });
 
-vscodeTest("example", async ({ page }) => {
+vscodeTest("example", async ({ page, execute }) => {
   // Open command pallete
   await page.keyboard.press("Control+Shift+P");
 
@@ -28,7 +27,7 @@ vscodeTest("example", async ({ page }) => {
 
   // Can access `vscode` API to write assertions which are difficult with `page` API
   expect(
-    await executeVscode((vscode) =>
+    await execute((vscode) =>
       vscode.window.activeTextEditor?.document.getText(),
     ),
   ).toMatchInlineSnapshot(`

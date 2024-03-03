@@ -1,6 +1,5 @@
 import { expect, vi, beforeEach } from "vitest";
 import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
-import { executeVscode } from "@hiogawa/vscode-e2e";
 
 beforeEach(({ task }) => {
   task.meta.vscodeExtensionPath = "./";
@@ -9,7 +8,7 @@ beforeEach(({ task }) => {
   task.meta.vscodeProxy = true;
 });
 
-vscodeTest("demo", async ({ page }) => {
+vscodeTest("demo", async ({ page, execute }) => {
   // open ex00.json
   await page.getByLabel("ex00.json", { exact: true }).locator("a").click();
 
@@ -27,9 +26,7 @@ vscodeTest("demo", async ({ page }) => {
   // check output
   await page.getByText("ex00 (shell).json", { exact: true }).click();
   const text = await vi.waitUntil(async () =>
-    executeVscode((vscode) =>
-      vscode.window.activeTextEditor?.document.getText(),
-    ),
+    execute((vscode) => vscode.window.activeTextEditor?.document.getText()),
   );
   expect(text).toMatchInlineSnapshot(`
     "{
