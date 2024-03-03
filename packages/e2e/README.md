@@ -8,25 +8,23 @@ for [VS Code Extension](https://code.visualstudio.com/api) E2E testing
 This package offers a custom [`Vitest fixture`](https://vitest.dev/guide/test-context.html#extend-test-context)
 for simplified test setup in Vitest.
 
-It also includes `executeVscode` utility to enable direct access to
+It also includes `execute` utility to enable direct access to
 [`vscode` API](https://code.visualstudio.com/api/references/vscode-api)
 from your test code.
 
 ```ts
 import { expect, vi, beforeEach } from "vitest";
 import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
-import { executeVscode } from "@hiogawa/vscode-e2e";
 
 // Use task.meta for configuration
 beforeEach(({ task }) => {
   task.meta.vscodeExtensionPath = "./";
   task.meta.vscodeWorkspacePath = "./examples/basic";
   task.meta.vscodeTrace = "on";
-  task.meta.vscodeProxy = true;
 });
 
 // `page` fixture to access window
-vscodeTest("example", async ({ page }) => {
+vscodeTest("example", async ({ page, execute }) => {
   // Open command pallete
   await page.keyboard.press("Control+Shift+P");
 
@@ -47,7 +45,7 @@ vscodeTest("example", async ({ page }) => {
 
   // Can access `vscode` API to write assertions which are difficult with `page` API
   expect(
-    await executeVscode((vscode) =>
+    await execute((vscode) =>
       vscode.window.activeTextEditor?.document.getText(),
     ),
   ).toMatchInlineSnapshot(`
@@ -66,12 +64,11 @@ and record interactions and assertions.
 Outside of Vitest, you can use `launchVscode` utility:
 
 ```ts
-import { launchVscode, executeVscode } from "@hiogawa/vscode-e2e";
+import { launch } from "@hiogawa/vscode-e2e";
 
-const app = await launchVscode({
+const { app, execute } = await launch({
   extensionPath: "./",
   workspacePath: "./example/basic",
-  enableProxy: true,
 });
 const page = await app.firstWindow();
 await page.pause();

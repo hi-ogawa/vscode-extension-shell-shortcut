@@ -3,7 +3,6 @@ import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
 beforeEach(({ task }) => {
   task.meta.vscodeTrace = "on";
-  task.meta.vscodeProxy = true;
 });
 
 vscodeTest("example", async ({ page, execute }) => {

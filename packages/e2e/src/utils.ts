@@ -15,10 +15,9 @@ export async function launch(options: {
   vscodePath?: string;
   extensionPath?: string;
   workspacePath?: string;
-  enableProxy?: boolean;
   args?: (args: string[]) => void;
 }) {
-  // download by default
+  // download by default (silence log?)
   const executablePath = options.vscodePath ?? (await download());
 
   // launch args
@@ -78,18 +77,22 @@ async function waitFor<T>(f: () => Promise<T>) {
   throw error;
 }
 
+// based on https://github.com/sindresorhus/get-port/blob/85c18678143f2c673bdaf5307971397b29ddf28b/index.js#L42
 async function findAvailablePort(): Promise<number> {
-  const server = nodeHttp.createServer();
-  return await new Promise((resolve, reject) => {
-    server.on("error", (e) => {
-      reject(e);
-    });
-    server.listen(() => {
-      const address = server.address();
-      tinyassert(address && typeof address === "object");
-      server.close(() => {
-        resolve(address.port);
+  const server = nodeHttp.createServer().unref();
+  const address = await new Promise<ReturnType<typeof server.address>>(
+    (resolve, reject) => {
+      server.on("error", (e) => {
+        reject(e);
       });
-    });
-  });
+      server.listen(() => {
+        const address = server.address();
+        server.close(() => {
+          resolve(address);
+        });
+      });
+    },
+  );
+  tinyassert(address && typeof address === "object");
+  return address.port;
 }

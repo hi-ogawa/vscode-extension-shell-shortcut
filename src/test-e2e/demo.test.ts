@@ -5,7 +5,6 @@ beforeEach(({ task }) => {
   task.meta.vscodeExtensionPath = "./";
   task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
   task.meta.vscodeTrace = "on";
-  task.meta.vscodeProxy = true;
 });
 
 vscodeTest("demo", async ({ page, execute }) => {
