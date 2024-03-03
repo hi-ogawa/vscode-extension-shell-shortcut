@@ -1,7 +1,7 @@
 import { launch } from "./utils";
 import { test, type TestAPI } from "vitest";
 import nodePath from "node:path";
-import type { Page } from "@playwright/test";
+import type { Page } from "playwright";
 
 export type VscodeTestFixture = {
   _launch: Awaited<ReturnType<typeof launch>>;
