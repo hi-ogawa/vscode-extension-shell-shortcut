@@ -1,10 +1,10 @@
 import { download } from "@vscode/test-electron";
-import { _electron } from "@playwright/test";
+import { _electron } from "playwright";
 import { executeVscode } from "./proxy/client";
 import { sleep } from "@hiogawa/utils";
 import nodeUrl from "node:url";
 
-export async function launchVscodeTest(options: {
+export async function launchVscode(options: {
   extensionPath?: string;
   workspacePath?: string;
   disableVscodeProxy?: boolean;

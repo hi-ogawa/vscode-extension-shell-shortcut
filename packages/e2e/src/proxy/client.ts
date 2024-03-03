@@ -1,7 +1,8 @@
 import { PROXY_PORT, type ProxyRequest, type ProxyResponse } from "./shared";
+import type * as VscodeType from "vscode";
 
 export async function executeVscode<T>(
-  f: (vscode: typeof import("vscode")) => T,
+  f: (vscode: typeof VscodeType) => T,
 ): Promise<Awaited<T>> {
   const res = await fetch(`http://localhost:${PROXY_PORT}`, {
     method: "POST",

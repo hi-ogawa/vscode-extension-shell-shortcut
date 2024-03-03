@@ -1,4 +1,4 @@
-import { launchVscodeTest } from "./utils";
+import { launchVscode } from "./utils";
 import { test, type TestAPI } from "vitest";
 import nodePath from "node:path";
 import type { ElectronApplication, Page } from "@playwright/test";
@@ -22,7 +22,7 @@ declare module "vitest" {
 export const vscodeTest: TestAPI<VscodeTestFixture> =
   test.extend<VscodeTestFixture>({
     app: async ({ task }, use) => {
-      const app = await launchVscodeTest({
+      const app = await launchVscode({
         extensionPath: task.meta.vscodeExtensionPath ?? process.cwd(),
         workspacePath: task.meta.vscodeWorkspacePath,
       });

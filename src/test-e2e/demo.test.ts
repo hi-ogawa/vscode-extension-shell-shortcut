@@ -3,7 +3,7 @@ import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 import { executeVscode } from "@hiogawa/vscode-e2e";
 
 beforeEach(({ task }) => {
-  task.meta.vscodeExtensionPath = process.cwd();
+  task.meta.vscodeExtensionPath = "./";
   task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
   task.meta.vscodeTrace = "on";
 });

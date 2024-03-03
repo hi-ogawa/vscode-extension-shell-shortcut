@@ -1,8 +1,8 @@
-import { launchVscodeTest, executeVscode } from "@hiogawa/vscode-e2e";
+import { launchVscode, executeVscode } from "@hiogawa/vscode-e2e";
 
 async function main() {
-  const app = await launchVscodeTest({
-    extensionPath: process.cwd(),
+  const app = await launchVscode({
+    extensionPath: "./",
     workspacePath: process.env["REPL_WORKSPACE"] || "./src/test/demo-workspace",
   });
   const page = await app.firstWindow();
