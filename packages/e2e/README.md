@@ -22,6 +22,7 @@ beforeEach(({ task }) => {
   task.meta.vscodeExtensionPath = "./";
   task.meta.vscodeWorkspacePath = "./examples/basic";
   task.meta.vscodeTrace = "on";
+  task.meta.vscodeProxy = true;
 });
 
 // `page` fixture to access window
@@ -70,6 +71,7 @@ import { launchVscode, executeVscode } from "@hiogawa/vscode-e2e";
 const app = await launchVscode({
   extensionPath: "./",
   workspacePath: "./example/basic",
+  enableProxy: true,
 });
 const page = await app.firstWindow();
 await page.pause();
