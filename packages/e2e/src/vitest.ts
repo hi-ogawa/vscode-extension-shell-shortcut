@@ -23,7 +23,7 @@ export const vscodeTest: TestAPI<VscodeTestFixture> =
   test.extend<VscodeTestFixture>({
     app: async ({ task }, use) => {
       const app = await launchVscode({
-        extensionPath: task.meta.vscodeExtensionPath ?? process.cwd(),
+        extensionPath: task.meta.vscodeExtensionPath,
         workspacePath: task.meta.vscodeWorkspacePath,
       });
       await use(app);
