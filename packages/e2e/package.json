@@ -1,0 +1,48 @@
+{
+  "name": "@hiogawa/vscode-e2e",
+  "version": "0.0.1",
+  "homepage": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut/tree/main/packages/e2e",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hi-ogawa/vscode-extension-shell-shortcut",
+    "directory": "packages/e2e"
+  },
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./vitest": {
+      "types": "./dist/vitest.d.ts",
+      "default": "./dist/vitest.js"
+    }
+  },
+  "files": [
+    "dist",
+    "misc/empty-extension"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepack": "tsup --clean",
+    "release": "pnpm publish --no-git-checks --access public"
+  },
+  "dependencies": {
+    "@vscode/test-electron": "^2.3.9",
+    "playwright": "^1.42.0",
+    "vitest": "^1.3.1"
+  },
+  "peerDependencies": {
+    "playwright": "*",
+    "vitest": "*"
+  },
+  "peerDependenciesMeta": {
+    "vitest": {
+      "optional": true
+    }
+  },
+  "volta": {
+    "extends": "../../package.json"
+  }
+}

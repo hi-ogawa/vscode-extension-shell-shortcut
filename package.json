@@ -13,8 +13,8 @@
   "main": "./dist/extension.cjs",
   "scripts": {
     "dev": "pnpm run --stream /^dev:/",
-    "tsc": "tsc",
-    "dev:tsc": "tsc --watch --preserveWatchOutput",
+    "tsc": "tsc -b tsconfig.json packages/*/tsconfig.json",
+    "dev:tsc": "pnpm tsc --watch --preserveWatchOutput",
     "build": "tsup && bash misc/build.sh",
     "dev:tsup": "tsup --watch",
     "test": "vscode-test",
@@ -89,7 +89,7 @@
   "activationEvents": [],
   "devDependencies": {
     "@hiogawa/utils": "1.6.1-pre.10",
-    "@playwright/test": "^1.42.0",
+    "@hiogawa/vscode-e2e": "workspace:*",
     "@tsconfig/strictest": "^2.0.2",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",

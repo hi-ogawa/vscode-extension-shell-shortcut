@@ -1,13 +1,15 @@
 import * as vscode from "vscode";
 import http from "node:http";
 import { createManualPromise, tinyassert } from "@hiogawa/utils";
-import { PROXY_PORT, type ProxyRequest, type ProxyResponse } from "./shared";
+import { type ProxyRequest, type ProxyResponse } from "./shared";
 
 // (Ab)use --extensionTestsPath to setup http server to expose vscode API.
 // The idea is same as wdio-vscode-service's websocket proxy:
 // https://github.com/webdriverio-community/wdio-vscode-service/blob/99fd9a5c32ef540c7778dbca92ad1e7335207975/src/proxy/index.ts
 
 export async function run() {
+  const port = Number(process.env["VSCODE_E2E_PROXY_PORT"]);
+
   const server = http.createServer(async (req, res) => {
     try {
       await vscodeProxyHandler(req, res);
@@ -19,9 +21,7 @@ export async function run() {
     }
   });
 
-  server.listen(PROXY_PORT, () => {
-    console.log(`:: server started at http://localhost:${PROXY_PORT}`);
-  });
+  server.listen(port);
 
   // keep it running
   await new Promise(() => {});
@@ -36,7 +36,7 @@ async function vscodeProxyHandler(
   const reqJson: ProxyRequest = JSON.parse(reqBody);
   tinyassert(typeof reqJson.fnString === "string", `invalid body: ${reqJson}`);
 
-  const f = eval(reqJson.fnString);
+  const f = (0, eval)(reqJson.fnString); // indirect eval
   tinyassert(typeof f === "function", `invalid code: ${reqJson.fnString}`);
 
   const result = await f(vscode);

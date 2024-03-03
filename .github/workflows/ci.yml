@@ -6,16 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: corepack enable
       - run: pnpm i
       - run: pnpm lint-check
-      - run: pnpm tsc
       - run: pnpm build
+      - run: pnpm -r build
+      - run: pnpm tsc
       - name: pnpm test
         run: xvfb-run --auto-servernum --server-args='-screen 0 1920x1080x24' pnpm test
       - name: pnpm test-e2e

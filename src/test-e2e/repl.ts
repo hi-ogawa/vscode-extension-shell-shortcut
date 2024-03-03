@@ -1,13 +1,12 @@
-import { executeVscode } from "./proxy/client";
-import { launchVscodeTest } from "./utils";
+import { launch } from "@hiogawa/vscode-e2e";
 
 async function main() {
-  const app = await launchVscodeTest({
-    extensionPath: process.cwd(),
+  const { app, execute } = await launch({
+    extensionPath: "./",
     workspacePath: process.env["REPL_WORKSPACE"] || "./src/test/demo-workspace",
   });
   const page = await app.firstWindow();
-  Object.assign(globalThis, { app, page, executeVscode });
+  Object.assign(globalThis, { app, page, execute });
   await page.pause();
 }
 

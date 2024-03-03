@@ -1,0 +1,7 @@
+{
+  "name": "vitest-e2e-empty-extension",
+  "displayName": "vitest-e2e-empty-extension",
+  "version": "0.0.0",
+  "publisher": "hi-ogawa",
+  "main": "./extension.cjs"
+}
