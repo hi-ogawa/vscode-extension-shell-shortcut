@@ -11,6 +11,9 @@ export async function launchVscode(options: {
   args?: (args: string[]) => void;
 }) {
   const executablePath = await download(); // silence log? // TODO: optional
+  const extensionDevelopmentPath = options.extensionPath
+    ? nodeUrl.pathToFileURL(options.extensionPath)
+    : new URL("../misc/empty-extension", import.meta.url);
   const args = [
     // cf. https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L41
     "--no-sandbox",
@@ -19,12 +22,8 @@ export async function launchVscode(options: {
     "--skip-welcome",
     "--skip-release-notes",
     "--disable-workspace-trust",
+    `--extensionDevelopmentPath=${extensionDevelopmentPath}`,
   ];
-  if (options.extensionPath) {
-    args.push(
-      `--extensionDevelopmentPath=${nodeUrl.pathToFileURL(options.extensionPath)}`,
-    );
-  }
   if (options.workspacePath) {
     args.push(`--folder-uri=${nodeUrl.pathToFileURL(options.workspacePath)}`);
   }

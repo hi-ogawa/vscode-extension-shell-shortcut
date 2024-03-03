@@ -20,7 +20,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "misc/empty-extension"
   ],
   "scripts": {
     "build": "tsup",
