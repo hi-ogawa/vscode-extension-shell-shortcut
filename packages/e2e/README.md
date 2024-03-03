@@ -5,12 +5,12 @@ for [VS Code Extension](https://code.visualstudio.com/api) E2E testing
 
 ## Usage
 
-This package provides [`Vitest fixture`](https://vitest.dev/guide/test-context.html#extend-test-context)
-to setup tests easily on Vitest.
+This package offers a custom [`Vitest fixture`](https://vitest.dev/guide/test-context.html#extend-test-context)
+for simplified test setup in Vitest.
 
-Additionally, it provides `executeVscode` utility to allow accessing
+It also includes `executeVscode` utility to enable direct access to
 [`vscode` API](https://code.visualstudio.com/api/references/vscode-api)
-directly from test code.
+from your test code.
 
 ```ts
 import { expect, vi, beforeEach } from "vitest";
@@ -62,7 +62,7 @@ and record interactions and assertions.
 
 ![image](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/assets/4232207/a508ddf1-4365-4743-8a59-73c62ca07c3d)
 
-Outside of Vitest, you can use a simple helepr `launchVscode`:
+Outside of Vitest, you can use `launchVscode` utility:
 
 ```ts
 import { launchVscode, executeVscode } from "@hiogawa/vscode-e2e";
