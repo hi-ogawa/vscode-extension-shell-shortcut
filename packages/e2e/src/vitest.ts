@@ -6,22 +6,8 @@ import type { ExecuteVscode } from "./proxy/client";
 import fs from "node:fs";
 import os from "node:os";
 
-export type VscodeTestFixture = {
-  _launch: Awaited<ReturnType<typeof launch>>;
-  app: ElectronApplication;
-  execute: ExecuteVscode;
-  page: Page;
-};
-
-export interface VscodeTestTaskMeta {
-  vscodeExtensionPath?: string;
-  vscodeWorkspacePath?: string;
-  vscodeTrace?: "on" | "off";
-}
-
-declare module "vitest" {
-  interface TaskMeta extends VscodeTestTaskMeta {}
-}
+// based on
+// https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L59
 
 const defaultConfig = process.env as {
   VSCODE_E2E_DOWNLOAD_PATH?: string;
@@ -30,8 +16,8 @@ const defaultConfig = process.env as {
   VSCODE_E2E_TRACE?: "on" | "off";
 };
 
-type VscodeTestFixture2 = {
-  open: (options?: {
+type VscodeTestFixture = {
+  launch: (options?: {
     extensionPath?: string;
     workspacePath?: string;
     trace?: "on" | "off";
@@ -42,9 +28,9 @@ type VscodeTestFixture2 = {
   }>;
 };
 
-export const vscodeTestV2: TestAPI<VscodeTestFixture2> =
-  test.extend<VscodeTestFixture2>({
-    open: async ({ task }, use) => {
+export const vscodeTest: TestAPI<VscodeTestFixture> =
+  test.extend<VscodeTestFixture>({
+    launch: async ({ task }, use) => {
       const teardowns: (() => Promise<void>)[] = [];
 
       await use(async (options) => {
@@ -99,48 +85,6 @@ export const vscodeTestV2: TestAPI<VscodeTestFixture2> =
 
       for (const teardown of teardowns) {
         await teardown();
-      }
-    },
-  });
-
-// cf. https://github.com/microsoft/playwright-vscode/blob/1c2f766a3ef4b7633fb19103a3d930ebe385250e/tests-integration/tests/baseTest.ts#L59
-export const vscodeTest: TestAPI<VscodeTestFixture> =
-  test.extend<VscodeTestFixture>({
-    _launch: async ({ task }, use) => {
-      const _launch = await launch({
-        extensionPath: task.meta.vscodeExtensionPath,
-        workspacePath: task.meta.vscodeWorkspacePath,
-      });
-      await use(_launch);
-      await _launch.app.close();
-    },
-    app: async ({ _launch: { app } }, use) => {
-      await use(app);
-    },
-    execute: async ({ _launch: { execute } }, use) => {
-      await use(execute);
-    },
-    page: async ({ app, task }, use) => {
-      const page = await app.firstWindow();
-      if (task.meta.vscodeTrace === "on") {
-        await page.context().tracing.start({
-          title: task.name,
-          screenshots: true,
-          snapshots: true,
-        });
-      }
-      await use(page);
-      if (task.meta.vscodeTrace === "on") {
-        await page.context().tracing.stop({
-          path: nodePath.resolve(
-            "test-results",
-            [nodePath.basename(task.file?.filepath!), task.name, task.id]
-              .filter(Boolean)
-              .join("-")
-              .replaceAll(/\W/g, "-"),
-            "trace.zip",
-          ),
-        });
       }
     },
   });

@@ -1,8 +1,8 @@
 import { expect } from "vitest";
-import { vscodeTestV2 as vscodeTest } from "@hiogawa/vscode-e2e/vitest";
+import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
-vscodeTest("example", async ({ open }) => {
-  const { page, execute } = await open();
+vscodeTest("example", async ({ launch }) => {
+  const { page, execute } = await launch();
 
   // Open command pallete
   await page.keyboard.press("Control+Shift+P");

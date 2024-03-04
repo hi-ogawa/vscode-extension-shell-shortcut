@@ -1,8 +1,8 @@
 import { expect, vi } from "vitest";
-import { vscodeTestV2 as vscodeTest } from "@hiogawa/vscode-e2e/vitest";
+import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
-vscodeTest("demo", async ({ open }) => {
-  const { page, execute } = await open({
+vscodeTest("demo", async ({ launch }) => {
+  const { page, execute } = await launch({
     workspacePath: "./src/test/demo-workspace",
   });
 
