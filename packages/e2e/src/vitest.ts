@@ -24,6 +24,7 @@ declare module "vitest" {
 }
 
 const defaultConfig = process.env as {
+  VSCODE_E2E_DOWNLOAD_PATH?: string;
   VSCODE_E2E_EXTENSION_PATH?: string;
   VSCODE_E2E_WORKSPACE_PATH?: string;
   VSCODE_E2E_TRACE?: "on" | "off";
@@ -53,6 +54,7 @@ export const vscodeTestV2: TestAPI<VscodeTestFixture2> =
 
         // launch
         const { app, execute } = await launch({
+          vscodePath: defaultConfig.VSCODE_E2E_DOWNLOAD_PATH,
           extensionPath: defaultConfig.VSCODE_E2E_EXTENSION_PATH,
           workspacePath: defaultConfig.VSCODE_E2E_WORKSPACE_PATH,
           args: (args) => {

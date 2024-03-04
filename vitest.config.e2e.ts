@@ -1,4 +1,5 @@
 import { defineConfig } from "vitest/config";
+import { download } from "@vscode/test-electron";
 
 export default defineConfig({
   test: {
@@ -8,6 +9,7 @@ export default defineConfig({
     // it works but it's too heavy to run in parallel?
     fileParallelism: false,
     env: {
+      VSCODE_E2E_DOWNLOAD_PATH: await download(),
       VSCODE_E2E_EXTENSION_PATH: "./",
       VSCODE_E2E_TRACE: "on",
     },
