@@ -1,13 +1,11 @@
-import { expect, vi, beforeEach } from "vitest";
-import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
+import { expect, vi } from "vitest";
+import { vscodeTestV2 as vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
-beforeEach(({ task }) => {
-  task.meta.vscodeExtensionPath = "./";
-  task.meta.vscodeWorkspacePath = "./src/test/demo-workspace";
-  task.meta.vscodeTrace = "on";
-});
+vscodeTest("demo", async ({ open }) => {
+  const { page, execute } = await open({
+    workspacePath: "./src/test/demo-workspace",
+  });
 
-vscodeTest("demo", async ({ page, execute }) => {
   // open ex00.json
   await page.getByLabel("ex00.json", { exact: true }).locator("a").click();
 

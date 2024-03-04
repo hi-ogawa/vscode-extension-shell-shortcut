@@ -1,11 +1,9 @@
-import { expect, beforeEach } from "vitest";
-import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
+import { expect } from "vitest";
+import { vscodeTestV2 as vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
-beforeEach(({ task }) => {
-  task.meta.vscodeTrace = "on";
-});
+vscodeTest("example", async ({ open }) => {
+  const { page, execute } = await open();
 
-vscodeTest("example", async ({ page, execute }) => {
   // Open command pallete
   await page.keyboard.press("Control+Shift+P");
 
