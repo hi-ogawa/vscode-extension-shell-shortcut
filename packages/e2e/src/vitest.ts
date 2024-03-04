@@ -28,6 +28,7 @@ type VscodeTestFixture = {
   }>;
 };
 
+// explicit typing for tsup dts
 export const vscodeTest: TestAPI<VscodeTestFixture> =
   test.extend<VscodeTestFixture>({
     launch: async ({ task }, use) => {
