@@ -53,6 +53,22 @@ vscodeTest("example", async ({ launch }) => {
 });
 ```
 
+You can also configure default settings via `VSCODE_E2E_...` environment variables:
+
+```ts
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    env: {
+      VSCODE_E2E_EXTENSION_PATH: "./",
+      VSCODE_E2E_WORKSPACE_PATH: "./examples/basic",
+      VSCODE_E2E_TRACE: "on",
+    },
+  },
+});
+```
+
 Like on Playwright, you can use [`page.pause()`](https://playwright.dev/docs/api/class-page#page-pause)
 to open [Playwright Inspector](https://playwright.dev/docs/debug#playwright-inspector)
 and record interactions and assertions.
