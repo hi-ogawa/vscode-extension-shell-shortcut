@@ -13,18 +13,16 @@ It also includes `execute` utility to enable direct access to
 from your test code.
 
 ```ts
-import { expect, vi, beforeEach } from "vitest";
+import { expect } from "vitest";
 import { vscodeTest } from "@hiogawa/vscode-e2e/vitest";
 
-// Use task.meta for configuration
-beforeEach(({ task }) => {
-  task.meta.vscodeExtensionPath = "./";
-  task.meta.vscodeWorkspacePath = "./examples/basic";
-  task.meta.vscodeTrace = "on";
-});
+vscodeTest("example", async ({ launch }) => {
+  const { page, execute } = await launch({
+    extensionPath: "./",
+    workspacePage: "./examples/basic",
+    trace: "on",
+  });
 
-// `page` fixture to access window
-vscodeTest("example", async ({ page, execute }) => {
   // Open command pallete
   await page.keyboard.press("Control+Shift+P");
 
@@ -55,13 +53,29 @@ vscodeTest("example", async ({ page, execute }) => {
 });
 ```
 
+You can also configure default settings via `VSCODE_E2E_...` environment variables:
+
+```ts
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    env: {
+      VSCODE_E2E_EXTENSION_PATH: "./",
+      VSCODE_E2E_WORKSPACE_PATH: "./examples/basic",
+      VSCODE_E2E_TRACE: "on",
+    },
+  },
+});
+```
+
 Like on Playwright, you can use [`page.pause()`](https://playwright.dev/docs/api/class-page#page-pause)
 to open [Playwright Inspector](https://playwright.dev/docs/debug#playwright-inspector)
 and record interactions and assertions.
 
 ![image](https://github.com/hi-ogawa/vscode-extension-shell-shortcut/assets/4232207/a508ddf1-4365-4743-8a59-73c62ca07c3d)
 
-Outside of Vitest, you can use `launchVscode` utility:
+Outside of Vitest, you can use `launch` utility directly:
 
 ```ts
 import { launch } from "@hiogawa/vscode-e2e";
